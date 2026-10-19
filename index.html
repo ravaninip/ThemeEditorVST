@@ -102,6 +102,62 @@ textarea { min-height: 120px; font-family: ui-monospace, Consolas, monospace; fo
 .plugin .cell .tr b.on { background: var(--text); }
 .plugin .cell span { color: var(--text); font-size: 13px; text-align: right; }
 
+
+.tabs { display: flex; gap: 4px; margin: 10px 0 4px; border-bottom: 1px solid var(--ui-edge); }
+.tabs button { border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: none; padding: 8px 14px; color: var(--ui-dim); font-weight: 600; }
+.tabs button[aria-selected="true"] { color: var(--ui-text); border-bottom-color: var(--ui-accent); }
+.pane[hidden], #layoutMain[hidden], #themeMain[hidden] { display: none; }
+.opts label { display: flex; gap: 8px; align-items: center; color: var(--ui-text); margin: 4px 0; font-size: 13px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.grid4 label { font-size: 11.5px; margin: 0; }
+.grid4 input { width: 100%; background: var(--ui-bg); color: var(--ui-text); border: 1px solid var(--ui-edge); border-radius: 6px; padding: 5px 6px; font: inherit; font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+.iconrow { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.iconrow button { padding: 5px 8px; font-size: 12px; flex: 1 1 auto; }
+#tree { max-height: 260px; overflow-y: auto; border: 1px solid var(--ui-edge); border-radius: 6px; background: var(--ui-bg); font-size: 12.5px; }
+#tree .tr { display: flex; align-items: center; gap: 6px; padding: 3px 8px; cursor: pointer; border-bottom: 1px solid var(--ui-edge); }
+#tree .tr.sel { background: color-mix(in srgb, var(--ui-accent) 25%, transparent); }
+#tree .tr.child { padding-left: 24px; }
+#tree .tr small { color: var(--ui-dim); margin-left: auto; font-family: ui-monospace, Consolas, monospace; font-size: 11px; }
+#tree .tr .chg { color: var(--ui-accent); width: 8px; }
+.canvas { --bg:#161a20; --panel:#1d232b; --well:#12161b; --accent:#3ddc97; --warm:#ffa94d; --text:#e6ebf0; --dim:#8b97a5;
+  --edge:#2c343e; --control:#232a33; --controlEdge:#343d49; --danger:#ff5d5d; --radius:8px;
+  position: relative; width: 980px; height: 720px; background: var(--bg); color: var(--text); overflow: hidden; touch-action: none;
+  font: 12px/1.2 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; user-select: none; }
+.canvas.grid { background-image: linear-gradient(to right, rgba(128,128,128,.10) 1px, transparent 1px), linear-gradient(to bottom, rgba(128,128,128,.10) 1px, transparent 1px); background-size: 20px 20px; }
+.el { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: visible; cursor: move; outline: 1px dashed rgba(128,128,128,.0); z-index: 2; }
+.el.t-panel { z-index: 1; background: var(--panel); border-radius: var(--radius); }
+.el.locked { z-index: 4; } .el.sel { z-index: 5; }
+.el:hover { outline-color: rgba(128,128,128,.7); }
+.el.sel { outline: 2px solid #4da3ff; }
+.el.hidden { opacity: .28; outline: 1px dashed var(--dim); }
+.el.overlap { outline: 2px dashed #ff4d4d; }
+.el .kname { color: var(--dim); font-size: 11px; height: 14px; white-space: nowrap; pointer-events: none; }
+.el svg { pointer-events: none; }
+.el.t-knob svg { flex: 1; min-height: 0; width: 100%; }
+.el .combo { width: 100%; height: 100%; max-height: 34px; background: var(--control); border: 1px solid var(--controlEdge); border-radius: 4px; color: var(--text); display: flex; align-items: center; justify-content: space-between; padding: 0 9px; font-size: 12.5px; pointer-events: none; overflow: hidden; white-space: nowrap; }
+.el .combo::after { content: ""; flex: none; width: 6px; height: 6px; border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(45deg) translate(-2px,-2px); }
+.el .lbltxt { color: var(--dim); pointer-events: none; white-space: nowrap; }
+.el .lbltxt.hdr { color: var(--accent); font-weight: 700; font-size: 12.5px; } .el .lbltxt.big { color: var(--accent); font-weight: 700; font-size: 26px; }
+.el.t-label { align-items: flex-start; }
+.el.t-graph, .el.t-meter { background: var(--well); border-radius: 5px; }
+.el.t-meter i { display: block; width: 55%; height: 60%; background: var(--accent); border-radius: 3px; align-self: flex-start; margin-left: 4px; pointer-events: none; }
+.el.t-graph svg { width: 100%; height: 100%; }
+.el.t-slider { justify-content: center; }
+.el .trk { position: relative; width: 100%; height: 6px; background: var(--well); border-radius: 3px; pointer-events: none; }
+.el .trk b { position: absolute; left: 62%; top: -2px; width: 10px; height: 10px; border-radius: 50%; background: var(--text); margin-left: -5px; }
+.el .trk i { position: absolute; left: 50%; width: 12%; top: 0; height: 6px; background: var(--accent); }
+.el .bar { display: flex; gap: 4px; width: 100%; height: 100%; pointer-events: none; }
+.el .bar div { background: var(--control); border: 1px solid var(--controlEdge); border-radius: 4px; display: grid; place-items: center; min-width: 14px; font-size: 12px; }
+.el .bar div:nth-child(2) { flex: 1; justify-content: start; padding-left: 8px; }
+.el .idtag { position: absolute; left: 0; top: -13px; font: 10px ui-monospace, Consolas, monospace; background: #000c; color: #fff; padding: 0 3px; border-radius: 3px; white-space: nowrap; pointer-events: none; z-index: 9; }
+.h { position: absolute; width: 9px; height: 9px; background: #fff; border: 2px solid #4da3ff; border-radius: 2px; z-index: 8; }
+.h[data-h="nw"] { left: -6px; top: -6px; cursor: nwse-resize; } .h[data-h="n"] { left: calc(50% - 5px); top: -6px; cursor: ns-resize; }
+.h[data-h="ne"] { right: -6px; top: -6px; cursor: nesw-resize; } .h[data-h="e"] { right: -6px; top: calc(50% - 5px); cursor: ew-resize; }
+.h[data-h="se"] { right: -6px; bottom: -6px; cursor: nwse-resize; } .h[data-h="s"] { left: calc(50% - 5px); bottom: -6px; cursor: ns-resize; }
+.h[data-h="sw"] { left: -6px; bottom: -6px; cursor: nesw-resize; } .h[data-h="w"] { left: -6px; top: calc(50% - 5px); cursor: ew-resize; }
+.guide { position: absolute; background: #ff4dd2; z-index: 10; pointer-events: none; }
+.guide.v { width: 1px; top: 0; bottom: 0; } .guide.hz { height: 1px; left: 0; right: 0; }
+
 @media (max-width: 900px) {
   .app { grid-template-columns: 1fr; } aside { position: static; max-height: none; border-right: 0; border-bottom: 1px solid var(--ui-edge); }
 }
@@ -111,6 +167,11 @@ textarea { min-height: 120px; font-family: ui-monospace, Consolas, monospace; fo
 <div class="app">
   <aside>
     <h1>Theme Studio</h1>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tabTheme" aria-selected="true" aria-controls="themePane">Theme</button>
+      <button role="tab" id="tabLayout" aria-selected="false" aria-controls="layoutPane">Layout</button>
+    </div>
+    <div class="pane" id="themePane">
     <p class="hint">Design the colours of the plug-in, check them live, then save the theme file.</p>
 
     <h2>Start from</h2>
@@ -158,14 +219,145 @@ textarea { min-height: 120px; font-family: ui-monospace, Consolas, monospace; fo
       <textarea id="paste" spellcheck="false" placeholder='{ "format": "plugin-theme", "version": 1, ... }'></textarea>
       <button id="loadPaste" style="margin-top:6px">Load pasted theme</button>
     </details>
+    </div>
+    <div class="pane" id="layoutPane" hidden>
+      <p class="hint">Move, resize and hide the elements of the interface. Click an element, drag it, resize it by its handles, or use the arrow keys (Shift = 10 px). The colours are those of the Theme tab.</p>
+
+      <h2>Plug-in</h2>
+      <div class="row"><select id="descSelect" aria-label="Plug-in"></select><button id="openDesc">Open element list…</button></div>
+      <input type="file" id="descFile" accept=".json,application/json" hidden>
+
+      <h2>Layout name</h2>
+      <input type="text" id="layoutName" maxlength="48" value="My layout" aria-label="Layout name">
+
+      <h2>Tools</h2>
+      <div class="opts">
+        <label><input type="checkbox" id="optSnap" checked> Snap to grid and to other elements</label>
+        <label><input type="checkbox" id="optGroup" checked> Move a panel together with its contents</label>
+        <label><input type="checkbox" id="optIds"> Show element ids</label>
+      </div>
+      <div class="iconrow">
+        <button id="undo" title="Undo (Ctrl+Z)">Undo</button><button id="redo" title="Redo (Ctrl+Y)">Redo</button>
+        <button id="resetAll">Reset all</button>
+      </div>
+
+      <h2>Selected</h2>
+      <p class="hint" id="selInfo">Nothing selected.</p>
+      <div class="grid4">
+        <div><label for="px">x</label><input type="number" id="px" step="1"></div><div><label for="py">y</label><input type="number" id="py" step="1"></div>
+        <div><label for="pw">width</label><input type="number" id="pw" step="1"></div><div><label for="ph">height</label><input type="number" id="ph" step="1"></div>
+      </div>
+      <div class="opts" style="margin-top:8px"><label><input type="checkbox" id="pvis" checked> Visible</label></div>
+      <div class="iconrow" id="aligns">
+        <button data-a="left" title="Align left">⇤</button><button data-a="hcenter" title="Centre horizontally">↔</button><button data-a="right" title="Align right">⇥</button>
+        <button data-a="top" title="Align top">⤒</button><button data-a="vcenter" title="Centre vertically">↕</button><button data-a="bottom" title="Align bottom">⤓</button>
+        <button data-a="hdist" title="Distribute horizontally (3 or more)">⇹</button><button data-a="vdist" title="Distribute vertically (3 or more)">⇳</button>
+        <button id="resetSel">Reset selected</button>
+      </div>
+
+      <h2>Elements</h2>
+      <div id="tree" role="listbox" aria-label="Elements"></div>
+
+      <h2>Save</h2>
+      <div class="row">
+        <button class="primary" id="lDownload">Download layout file</button>
+        <button id="lCopy">Copy JSON</button>
+      </div>
+      <div class="msg" id="lmsg" role="status"></div>
+      <p class="where">Put the file in the plug-in's layouts folder: choose <b>Open layouts folder…</b> in the plug-in's Layout menu, then <b>Reload layouts</b>. Only the elements you changed are saved. See <code>docs/LAYOUTS.md</code>.</p>
+      <details><summary>Open an existing layout file</summary>
+        <div class="row" style="margin-top:8px"><button id="lOpen">Choose a .json file…</button></div>
+        <input type="file" id="lFile" accept=".json,application/json" hidden>
+      </details>
+    </div>
   </aside>
 
   <main>
-    <div class="stage" id="stage" aria-label="Live preview of the plug-in"><div class="stage-inner" id="inner"></div></div>
-    <p class="hint" style="margin-top:8px">Preview of Solomon. Colours, graphs and the corner radius follow your edits instantly; values shown are examples.</p>
+    <div id="themeMain">
+      <div class="stage" id="stage" aria-label="Live preview of the plug-in"><div class="stage-inner" id="inner"></div></div>
+      <p class="hint" style="margin-top:8px">Preview of Solomon. Colours, graphs and the corner radius follow your edits instantly; values shown are examples.</p>
+    </div>
+    <div id="layoutMain" hidden>
+      <div class="stage" id="lstage" aria-label="Layout editor"><div class="stage-inner" id="linner"><div class="canvas grid" id="canvas"></div></div></div>
+      <p class="hint" style="margin-top:8px" id="lhint"></p>
+    </div>
   </main>
 </div>
 
+<script type="application/json" id="desc-solomon">
+{
+ "format": "plugin-layout-descriptor", "version": 1, "plugin": "Solomon", "baseWidth": 980, "baseHeight": 720,
+ "elements": [
+  {"id": "panel.osc", "type": "panel", "label": "Oscillator", "x": 14, "y": 94, "w": 336, "h": 238},
+  {"id": "panel.filter", "type": "panel", "label": "Filter", "x": 358, "y": 94, "w": 393, "h": 238},
+  {"id": "panel.lfo", "type": "panel", "label": "LFO", "x": 759, "y": 94, "w": 207, "h": 238},
+  {"id": "panel.ampEnv", "type": "panel", "label": "Amp envelope", "x": 14, "y": 340, "w": 472, "h": 149},
+  {"id": "panel.fltEnv", "type": "panel", "label": "Filter envelope", "x": 494, "y": 340, "w": 472, "h": 149},
+  {"id": "panel.matrix", "type": "panel", "label": "Modulation matrix", "x": 14, "y": 497, "w": 952, "h": 209},
+  {"id": "title", "type": "label", "label": "Title", "x": 14, "y": 14, "w": 150, "h": 44},
+  {"id": "theme", "type": "menu", "label": "Theme", "locked": true, "x": 14, "y": 58, "w": 88, "h": 24},
+  {"id": "layout", "type": "menu", "label": "Layout", "locked": true, "x": 112, "y": 58, "w": 52, "h": 24},
+  {"id": "preset", "type": "group", "label": "Presets", "x": 164, "y": 18, "w": 330, "h": 50},
+  {"id": "model", "type": "menu", "label": "Oscillator model", "param": "model", "x": 506, "y": 20, "w": 230, "h": 46},
+  {"id": "meter", "type": "meter", "label": "Voices and level", "x": 774, "y": 36, "w": 102, "h": 38},
+  {"id": "knob.volume", "type": "knob", "label": "Volume", "param": "volume", "x": 874, "y": 14, "w": 94, "h": 76},
+  {"id": "header.osc", "type": "label", "label": "Oscillator header", "parent": "panel.osc", "x": 24, "y": 94, "w": 316, "h": 26},
+  {"id": "knob.harmonics", "type": "knob", "label": "Harmonics", "param": "harmonics", "parent": "panel.osc", "x": 20, "y": 120, "w": 81, "h": 212},
+  {"id": "knob.timbre", "type": "knob", "label": "Timbre", "param": "timbre", "parent": "panel.osc", "x": 101, "y": 120, "w": 81, "h": 212},
+  {"id": "knob.morph", "type": "knob", "label": "Morph", "param": "morph", "parent": "panel.osc", "x": 182, "y": 120, "w": 81, "h": 212},
+  {"id": "knob.tune", "type": "knob", "label": "Tune", "param": "tune", "parent": "panel.osc", "x": 263, "y": 120, "w": 81, "h": 212},
+  {"id": "header.filter", "type": "label", "label": "Filter header", "parent": "panel.filter", "x": 368, "y": 96, "w": 253, "h": 22},
+  {"id": "menu.filterMode", "type": "menu", "label": "Filter type", "param": "filterMode", "parent": "panel.filter", "x": 621, "y": 96, "w": 120, "h": 22},
+  {"id": "graph.filter", "type": "graph", "label": "Filter response", "parent": "panel.filter", "x": 368, "y": 122, "w": 373, "h": 91},
+  {"id": "knob.cutoff", "type": "knob", "label": "Cutoff", "param": "cutoff", "parent": "panel.filter", "x": 366, "y": 215, "w": 188, "h": 117},
+  {"id": "knob.resonance", "type": "knob", "label": "Resonance", "param": "resonance", "parent": "panel.filter", "x": 554, "y": 215, "w": 188, "h": 117},
+  {"id": "header.lfo", "type": "label", "label": "LFO header", "parent": "panel.lfo", "x": 769, "y": 96, "w": 75, "h": 22},
+  {"id": "menu.lfoShape", "type": "menu", "label": "LFO shape", "param": "lfoShape", "parent": "panel.lfo", "x": 844, "y": 96, "w": 112, "h": 22},
+  {"id": "knob.lfoRate", "type": "knob", "label": "LFO rate", "param": "lfoRate", "parent": "panel.lfo", "x": 765, "y": 120, "w": 195, "h": 212},
+  {"id": "header.ampEnv", "type": "label", "label": "Amp envelope header", "parent": "panel.ampEnv", "x": 24, "y": 340, "w": 452, "h": 26},
+  {"id": "graph.ampEnv", "type": "graph", "label": "Amp envelope shape", "parent": "panel.ampEnv", "x": 321, "y": 372, "w": 153, "h": 111},
+  {"id": "header.fltEnv", "type": "label", "label": "Filter envelope header", "parent": "panel.fltEnv", "x": 504, "y": 340, "w": 452, "h": 26},
+  {"id": "graph.fltEnv", "type": "graph", "label": "Filter envelope shape", "parent": "panel.fltEnv", "x": 801, "y": 372, "w": 153, "h": 111},
+  {"id": "knob.ampA", "type": "knob", "label": "Amp A", "param": "ampA", "parent": "panel.ampEnv", "x": 20, "y": 366, "w": 73, "h": 123},
+  {"id": "knob.fltA", "type": "knob", "label": "Filter A", "param": "fltA", "parent": "panel.fltEnv", "x": 500, "y": 366, "w": 73, "h": 123},
+  {"id": "knob.ampD", "type": "knob", "label": "Amp D", "param": "ampD", "parent": "panel.ampEnv", "x": 93, "y": 366, "w": 73, "h": 123},
+  {"id": "knob.fltD", "type": "knob", "label": "Filter D", "param": "fltD", "parent": "panel.fltEnv", "x": 573, "y": 366, "w": 73, "h": 123},
+  {"id": "knob.ampS", "type": "knob", "label": "Amp S", "param": "ampS", "parent": "panel.ampEnv", "x": 166, "y": 366, "w": 73, "h": 123},
+  {"id": "knob.fltS", "type": "knob", "label": "Filter S", "param": "fltS", "parent": "panel.fltEnv", "x": 646, "y": 366, "w": 73, "h": 123},
+  {"id": "knob.ampR", "type": "knob", "label": "Amp R", "param": "ampR", "parent": "panel.ampEnv", "x": 239, "y": 366, "w": 73, "h": 123},
+  {"id": "knob.fltR", "type": "knob", "label": "Filter R", "param": "fltR", "parent": "panel.fltEnv", "x": 719, "y": 366, "w": 73, "h": 123},
+  {"id": "header.matrix", "type": "label", "label": "Matrix header", "parent": "panel.matrix", "x": 24, "y": 497, "w": 932, "h": 26},
+  {"id": "matrix.src.0", "type": "label", "label": "LFO", "parent": "panel.matrix", "x": 24, "y": 546, "w": 110, "h": 19},
+  {"id": "matrix.bar.0", "type": "meter", "label": "LFO level", "parent": "panel.matrix", "x": 26, "y": 565, "w": 100, "h": 15},
+  {"id": "matrix.src.1", "type": "label", "label": "Envelope", "parent": "panel.matrix", "x": 24, "y": 586, "w": 110, "h": 19},
+  {"id": "matrix.bar.1", "type": "meter", "label": "Envelope level", "parent": "panel.matrix", "x": 26, "y": 605, "w": 100, "h": 15},
+  {"id": "matrix.src.2", "type": "label", "label": "Velocity", "parent": "panel.matrix", "x": 24, "y": 626, "w": 110, "h": 19},
+  {"id": "matrix.bar.2", "type": "meter", "label": "Velocity level", "parent": "panel.matrix", "x": 26, "y": 645, "w": 100, "h": 15},
+  {"id": "matrix.src.3", "type": "label", "label": "Pressure", "parent": "panel.matrix", "x": 24, "y": 666, "w": 110, "h": 19},
+  {"id": "matrix.bar.3", "type": "meter", "label": "Pressure level", "parent": "panel.matrix", "x": 26, "y": 685, "w": 100, "h": 15},
+  {"id": "matrix.dst.0", "type": "label", "label": "Timbre", "parent": "panel.matrix", "x": 134, "y": 525, "w": 205, "h": 18},
+  {"id": "matrix.dst.1", "type": "label", "label": "Morph", "parent": "panel.matrix", "x": 339, "y": 525, "w": 205, "h": 18},
+  {"id": "matrix.dst.2", "type": "label", "label": "Harmonics", "parent": "panel.matrix", "x": 544, "y": 525, "w": 205, "h": 18},
+  {"id": "matrix.dst.3", "type": "label", "label": "Cutoff", "parent": "panel.matrix", "x": 749, "y": 525, "w": 205, "h": 18},
+  {"id": "matrix.cell.0.0", "type": "slider", "label": "LFO to Timbre", "param": "mod_lfo_timbre", "parent": "panel.matrix", "x": 142, "y": 545, "w": 189, "h": 36},
+  {"id": "matrix.cell.0.1", "type": "slider", "label": "LFO to Morph", "param": "mod_lfo_morph", "parent": "panel.matrix", "x": 347, "y": 545, "w": 189, "h": 36},
+  {"id": "matrix.cell.0.2", "type": "slider", "label": "LFO to Harmonics", "param": "mod_lfo_harm", "parent": "panel.matrix", "x": 552, "y": 545, "w": 189, "h": 36},
+  {"id": "matrix.cell.0.3", "type": "slider", "label": "LFO to Cutoff", "param": "mod_lfo_cutoff", "parent": "panel.matrix", "x": 757, "y": 545, "w": 189, "h": 36},
+  {"id": "matrix.cell.1.0", "type": "slider", "label": "Envelope to Timbre", "param": "mod_env_timbre", "parent": "panel.matrix", "x": 142, "y": 585, "w": 189, "h": 36},
+  {"id": "matrix.cell.1.1", "type": "slider", "label": "Envelope to Morph", "param": "mod_env_morph", "parent": "panel.matrix", "x": 347, "y": 585, "w": 189, "h": 36},
+  {"id": "matrix.cell.1.2", "type": "slider", "label": "Envelope to Harmonics", "param": "mod_env_harm", "parent": "panel.matrix", "x": 552, "y": 585, "w": 189, "h": 36},
+  {"id": "matrix.cell.1.3", "type": "slider", "label": "Envelope to Cutoff", "param": "mod_env_cutoff", "parent": "panel.matrix", "x": 757, "y": 585, "w": 189, "h": 36},
+  {"id": "matrix.cell.2.0", "type": "slider", "label": "Velocity to Timbre", "param": "mod_vel_timbre", "parent": "panel.matrix", "x": 142, "y": 625, "w": 189, "h": 36},
+  {"id": "matrix.cell.2.1", "type": "slider", "label": "Velocity to Morph", "param": "mod_vel_morph", "parent": "panel.matrix", "x": 347, "y": 625, "w": 189, "h": 36},
+  {"id": "matrix.cell.2.2", "type": "slider", "label": "Velocity to Harmonics", "param": "mod_vel_harm", "parent": "panel.matrix", "x": 552, "y": 625, "w": 189, "h": 36},
+  {"id": "matrix.cell.2.3", "type": "slider", "label": "Velocity to Cutoff", "param": "mod_vel_cutoff", "parent": "panel.matrix", "x": 757, "y": 625, "w": 189, "h": 36},
+  {"id": "matrix.cell.3.0", "type": "slider", "label": "Pressure to Timbre", "param": "mod_pres_timbre", "parent": "panel.matrix", "x": 142, "y": 665, "w": 189, "h": 36},
+  {"id": "matrix.cell.3.1", "type": "slider", "label": "Pressure to Morph", "param": "mod_pres_morph", "parent": "panel.matrix", "x": 347, "y": 665, "w": 189, "h": 36},
+  {"id": "matrix.cell.3.2", "type": "slider", "label": "Pressure to Harmonics", "param": "mod_pres_harm", "parent": "panel.matrix", "x": 552, "y": 665, "w": 189, "h": 36},
+  {"id": "matrix.cell.3.3", "type": "slider", "label": "Pressure to Cutoff", "param": "mod_pres_cutoff", "parent": "panel.matrix", "x": 757, "y": 665, "w": 189, "h": 36}
+ ]
+}
+</script>
 <script>
 "use strict";
 // ---- the format (keep in step with Source/Theme.cpp and docs/THEMES.md) -------------------------
@@ -331,12 +523,18 @@ function applyPreview() {
   const p = $("plugin"); if (!p) return;
   for (const [k] of FIELDS) if (hexOk(state[k])) p.style.setProperty("--" + k, state[k]);
   p.style.setProperty("--radius", state.radius + "px");
+  applyCanvasVars();
   $("pvTheme").textContent = cleanName(state.name) || "Theme";
 }
 function fitStage() {
   const w = $("stage").clientWidth, s = w / 980;
   $("inner").style.transform = `scale(${s})`;
   $("stage").style.height = Math.round(720 * s) + "px";
+  if (typeof LAYOUT !== "undefined" && LAYOUT.desc && !$("layoutMain").hidden) {
+    const lw = $("lstage").clientWidth, ls = lw / baseW();
+    LAYOUT.scale = ls; $("linner").style.transform = `scale(${ls})`; $("linner").style.width = baseW() + "px"; $("linner").style.height = baseH() + "px";
+    $("lstage").style.height = Math.round(baseH() * ls) + "px";
+  }
 }
 
 // ---- controls ----------------------------------------------------------------------------------------
@@ -417,7 +615,324 @@ function refresh(keepFocus) {
   if (bad) say(problems()[0], true); else if ($("msg").classList.contains("bad")) say("", false);
   applyPreview();
 }
-buildControls(); buildPreview(); refresh(false); fitStage();
+// ======================================================================== layout editor
+const ID_RE = /^[A-Za-z0-9._-]{1,64}$/;
+const TYPES = ["panel", "label", "knob", "slider", "menu", "graph", "meter", "group"];
+const MIN_SIZE = 12, MAX_LAYOUT_BYTES = 32 * 1024, MAX_LAYOUT_ENTRIES = 256, MAX_DESC_BYTES = 128 * 1024, MAX_DESC_ELEMENTS = 512, GRID = 4, SNAP = 5;
+const LAYOUT = { desc: null, defs: new Map(), layout: {}, sel: new Set(), hist: [], at: -1, drag: null, nodes: new Map(), scale: 1 };
+const DESCRIPTORS = { Solomon: JSON.parse($("desc-solomon").textContent) };
+const cleanText = (s, n) => [...String(s)].filter(c => c.codePointAt(0) >= 32 && c.codePointAt(0) !== 127).join("").trim().slice(0, n);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const isNum = v => typeof v === "number" && isFinite(v);
+
+function readDescriptor(text) {
+  if (new TextEncoder().encode(text).length > MAX_DESC_BYTES) throw new Error("The element list is larger than 128 KiB.");
+  let o; try { o = JSON.parse(text); } catch { throw new Error("That is not valid JSON."); }
+  if (!o || o.format !== "plugin-layout-descriptor") throw new Error('Not an element list (missing "format": "plugin-layout-descriptor").');
+  if (o.version !== 1) throw new Error("Unsupported version " + o.version + ".");
+  const plugin = cleanText(o.plugin, 48);
+  if (!plugin) throw new Error('Missing "plugin".');
+  if (!Number.isInteger(o.baseWidth) || !Number.isInteger(o.baseHeight) || o.baseWidth < 100 || o.baseHeight < 100 || o.baseWidth > 4000 || o.baseHeight > 4000)
+    throw new Error("Bad baseWidth / baseHeight.");
+  if (!Array.isArray(o.elements) || !o.elements.length || o.elements.length > MAX_DESC_ELEMENTS) throw new Error('"elements" must be a list of 1 to ' + MAX_DESC_ELEMENTS + " items.");
+  const seen = new Set(), elements = [];
+  for (const e of o.elements) {
+    if (!e || typeof e.id !== "string" || !ID_RE.test(e.id) || seen.has(e.id)) throw new Error("Bad or repeated element id.");
+    if (!TYPES.includes(e.type)) throw new Error('Element "' + e.id + '" has an unknown type.');
+    if (![e.x, e.y, e.w, e.h].every(isNum)) throw new Error('Element "' + e.id + '" needs numbers x, y, w and h.');
+    seen.add(e.id);
+    elements.push({ id: e.id, type: e.type, label: cleanText(e.label || e.id, 80), param: typeof e.param === "string" ? cleanText(e.param, 64) : "",
+      parent: typeof e.parent === "string" && ID_RE.test(e.parent) ? e.parent : "", locked: e.locked === true,
+      x: Math.round(e.x), y: Math.round(e.y), w: Math.round(e.w), h: Math.round(e.h) });
+  }
+  return { plugin, baseWidth: o.baseWidth, baseHeight: o.baseHeight, elements };
+}
+
+// ---- model ---------------------------------------------------------------------------------------------
+const baseW = () => LAYOUT.desc.baseWidth, baseH = () => LAYOUT.desc.baseHeight;
+const eff = id => { const d = LAYOUT.defs.get(id), o = LAYOUT.layout[id]; return o ? { ...o } : { x: d.x, y: d.y, w: d.w, h: d.h, visible: true }; };
+function setEff(id, r) {
+  const d = LAYOUT.defs.get(id);
+  const w = clamp(Math.round(r.w), MIN_SIZE, baseW()), h = clamp(Math.round(r.h), MIN_SIZE, baseH());
+  const x = clamp(Math.round(r.x), 0, baseW() - w), y = clamp(Math.round(r.y), 0, baseH() - h);
+  const visible = d.locked ? true : r.visible !== false;
+  if (x === d.x && y === d.y && w === d.w && h === d.h && visible) delete LAYOUT.layout[id]; else LAYOUT.layout[id] = { x, y, w, h, visible };
+}
+const changed = () => Object.keys(LAYOUT.layout);
+const snapshot = () => JSON.stringify(LAYOUT.layout);
+function commit() {
+  const s = snapshot();
+  if (LAYOUT.hist[LAYOUT.at] === s) return;
+  LAYOUT.hist = LAYOUT.hist.slice(0, LAYOUT.at + 1); LAYOUT.hist.push(s); if (LAYOUT.hist.length > 200) LAYOUT.hist.shift();
+  LAYOUT.at = LAYOUT.hist.length - 1; refreshLayout();
+}
+function undoRedo(step) {
+  const i = LAYOUT.at + step; if (i < 0 || i >= LAYOUT.hist.length) return;
+  LAYOUT.at = i; LAYOUT.layout = JSON.parse(LAYOUT.hist[i]); refreshLayout();
+}
+const childrenOf = id => LAYOUT.desc.elements.filter(e => e.parent === id).map(e => e.id);
+const selected = () => [...LAYOUT.sel].filter(id => LAYOUT.defs.has(id));
+const primary = () => selected()[selected().length - 1];
+const targetsOf = ids => { const t = new Set(ids); if ($("optGroup").checked) for (const id of ids) if (LAYOUT.defs.get(id).type === "panel") childrenOf(id).forEach(c => t.add(c)); return [...t]; };
+
+// ---- loading a plug-in ---------------------------------------------------------------------------------------
+function useDescriptor(desc) {
+  LAYOUT.desc = desc; LAYOUT.defs = new Map(desc.elements.map(e => [e.id, e])); LAYOUT.layout = {}; LAYOUT.sel.clear();
+  LAYOUT.hist = [snapshot()]; LAYOUT.at = 0;
+  buildCanvas(); refreshLayout(); fitStage();
+}
+function buildCanvas() {
+  const c = $("canvas"); c.replaceChildren(); LAYOUT.nodes.clear();
+  c.style.width = baseW() + "px"; c.style.height = baseH() + "px";
+  for (const e of LAYOUT.desc.elements) {
+    const n = document.createElement("div"); n.className = "el t-" + e.type + (e.locked ? " locked" : ""); n.dataset.id = e.id;
+    fillElement(n, e); LAYOUT.nodes.set(e.id, n); c.appendChild(n);
+  }
+  $("lhint").textContent = LAYOUT.desc.plugin + " at " + baseW() + " × " + baseH() + " px. Elements dimmed with a dashed outline are hidden; elements outlined in red overlap.";
+  $("layoutName").value = "My " + LAYOUT.desc.plugin + " layout";
+}
+function svg(html, vb) { const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.setAttribute("viewBox", vb); s.setAttribute("preserveAspectRatio", "xMidYMid meet"); s.innerHTML = html; return s; }
+function fillElement(n, e) {
+  const text = (cls, t) => { const sp = document.createElement("span"); sp.className = cls; sp.textContent = t; return sp; };
+  switch (e.type) {
+    case "label": {
+      const hdr = e.id.startsWith("header."), big = e.id === "title";
+      n.appendChild(text("lbltxt " + (hdr ? "hdr" : big ? "big" : ""), hdr ? e.label.replace(/ header$/i, "").toUpperCase() : big ? LAYOUT.desc.plugin : e.label));
+      break; }
+    case "knob": {
+      const k = document.createElement("div"); k.className = "kname"; k.textContent = e.label; n.appendChild(k);
+      n.appendChild(svg(`<path d="${arc(40, 40, 24, -2.35, 2.35)}" fill="none" stroke="var(--edge)" stroke-width="5" stroke-linecap="round"/><path d="${arc(40, 40, 24, -2.35, 0.7)}" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/><circle cx="${(40 + 24 * Math.sin(0.7)).toFixed(1)}" cy="${(40 - 24 * Math.cos(0.7)).toFixed(1)}" r="6.5" fill="var(--text)"/>`, "0 0 80 80"));
+      break; }
+    case "slider": { const t = document.createElement("div"); t.className = "trk"; t.innerHTML = "<i></i><b></b>"; n.appendChild(t); break; }
+    case "menu": { const c = document.createElement("div"); c.className = "combo"; c.appendChild(text("", e.label)); n.appendChild(c); break; }
+    case "graph": n.appendChild(e.id === "graph.filter" ? svgFromHtml(filterSvg()) : svgFromHtml(envSvg(.1, .5, .8, .4))); break;
+    case "meter": { const i = document.createElement("i"); n.appendChild(i); break; }
+    case "group": { const b = document.createElement("div"); b.className = "bar"; b.innerHTML = "<div>&lt;</div><div></div><div>Save</div><div>&gt;</div>"; b.children[1].textContent = e.label; n.appendChild(b); break; }
+  }
+  if (e.type === "panel") n.appendChild(text("", ""));
+}
+function svgFromHtml(html) { const t = document.createElement("div"); t.innerHTML = html; const s = t.firstElementChild; s.removeAttribute("style"); return s; }
+
+// ---- drawing the current state -----------------------------------------------------------------------------------
+function overlaps(a, b) { return Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x) > 3 && Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y) > 3; }
+function refreshLayout() {
+  if (!LAYOUT.desc) return;
+  const rects = new Map(); for (const e of LAYOUT.desc.elements) rects.set(e.id, eff(e.id));
+  const flat = LAYOUT.desc.elements.filter(e => e.type !== "panel" && rects.get(e.id).visible !== false);
+  const bad = new Set();
+  for (let i = 0; i < flat.length; i++) for (let j = i + 1; j < flat.length; j++) if (overlaps(rects.get(flat[i].id), rects.get(flat[j].id))) { bad.add(flat[i].id); bad.add(flat[j].id); }
+  const showIds = $("optIds").checked, one = selected().length === 1 ? primary() : null;
+  for (const [id, n] of LAYOUT.nodes) {
+    const r = rects.get(id);
+    n.style.left = r.x + "px"; n.style.top = r.y + "px"; n.style.width = r.w + "px"; n.style.height = r.h + "px";
+    n.classList.toggle("sel", LAYOUT.sel.has(id)); n.classList.toggle("hidden", r.visible === false); n.classList.toggle("overlap", bad.has(id));
+    n.querySelectorAll(".h, .idtag").forEach(x => x.remove());
+    if (showIds || LAYOUT.sel.has(id)) { const t = document.createElement("span"); t.className = "idtag"; t.textContent = id; n.appendChild(t); }
+    if (one === id) for (const d of ["nw", "n", "ne", "e", "se", "s", "sw", "w"]) { const h = document.createElement("span"); h.className = "h"; h.dataset.h = d; n.appendChild(h); }
+  }
+  // properties
+  const ids = selected(), p = ids.length ? eff(primary()) : null, single = ids.length === 1;
+  $("selInfo").textContent = !ids.length ? "Nothing selected." : single ? LAYOUT.defs.get(ids[0]).label + " (" + ids[0] + ")" + (LAYOUT.defs.get(ids[0]).locked ? " — locked: it can be moved but never hidden" : "") : ids.length + " elements selected";
+  for (const [k, id] of [["x", "px"], ["y", "py"], ["w", "pw"], ["h", "ph"]]) { const el = $(id); el.disabled = !single; if (document.activeElement !== el) el.value = single ? p[k] : ""; }
+  $("pvis").disabled = !ids.length || ids.every(i => LAYOUT.defs.get(i).locked); $("pvis").checked = !ids.length || ids.some(i => eff(i).visible !== false);
+  $("undo").disabled = LAYOUT.at <= 0; $("redo").disabled = LAYOUT.at >= LAYOUT.hist.length - 1;
+  // tree
+  const tree = $("tree"); tree.replaceChildren();
+  const order = LAYOUT.desc.elements.filter(e => !e.parent).flatMap(e => [e, ...LAYOUT.desc.elements.filter(c => c.parent === e.id)]);
+  const rest = LAYOUT.desc.elements.filter(e => e.parent && !LAYOUT.defs.has(e.parent));
+  for (const e of [...order, ...rest.filter(r => !order.includes(r))]) {
+    const row = document.createElement("div"); row.className = "tr" + (e.parent ? " child" : "") + (LAYOUT.sel.has(e.id) ? " sel" : ""); row.dataset.id = e.id; row.setAttribute("role", "option");
+    const chg = document.createElement("span"); chg.className = "chg"; chg.textContent = LAYOUT.layout[e.id] ? "●" : "";
+    const nm = document.createElement("span"); nm.textContent = e.label; const sm = document.createElement("small"); sm.textContent = e.id;
+    row.append(chg, nm, sm); tree.appendChild(row);
+  }
+  // export state
+  const n = changed().length, tooMany = n > MAX_LAYOUT_ENTRIES, noName = !cleanText($("layoutName").value, 48);
+  $("lDownload").disabled = !n || tooMany || noName; $("lCopy").disabled = $("lDownload").disabled;
+  lsay(tooMany ? "Too many changed elements (" + MAX_LAYOUT_ENTRIES + " at most)." : !n ? "No changes yet." : n + " element" + (n > 1 ? "s" : "") + " changed" + (bad.size ? ", " + bad.size + " overlapping." : "."), tooMany);
+}
+function lsay(t, bad) { const m = $("lmsg"); m.textContent = t; m.className = "msg" + (bad ? " bad" : ""); }
+
+// ---- pointer interaction -------------------------------------------------------------------------------------------
+const toBase = ev => { const r = $("canvas").getBoundingClientRect(); return { x: (ev.clientX - r.left) / LAYOUT.scale, y: (ev.clientY - r.top) / LAYOUT.scale }; };
+function selectOnly(id) { LAYOUT.sel = new Set(id ? [id] : []); }
+function guidesClear() { document.querySelectorAll(".guide").forEach(g => g.remove()); }
+function guide(kind, pos) { const g = document.createElement("div"); g.className = "guide " + kind; if (kind === "v") g.style.left = pos + "px"; else g.style.top = pos + "px"; $("canvas").appendChild(g); }
+function snapToOthers(r, skip, axis) {                       // returns the offset that aligns an edge or the centre with another element
+  let best = null;
+  const mine = axis === "x" ? [r.x, r.x + r.w / 2, r.x + r.w] : [r.y, r.y + r.h / 2, r.y + r.h];
+  for (const e of LAYOUT.desc.elements) {
+    if (skip.has(e.id)) continue;
+    const o = eff(e.id); if (o.visible === false) continue;
+    const theirs = axis === "x" ? [o.x, o.x + o.w / 2, o.x + o.w] : [o.y, o.y + o.h / 2, o.y + o.h];
+    for (const a of mine) for (const b of theirs) { const d = b - a; if (Math.abs(d) <= SNAP && (best === null || Math.abs(d) < Math.abs(best.d))) best = { d, at: b }; }
+  }
+  return best;
+}
+function startDrag(ev, id, handle) {
+  const ids = handle ? [id] : targetsOf(selected());
+  LAYOUT.drag = { mode: handle ? "resize" : "move", handle, id, start: toBase(ev), orig: new Map(ids.map(i => [i, eff(i)])), moved: false };
+}
+function onMove(ev) {
+  const d = LAYOUT.drag; if (!d) return;
+  const p = toBase(ev); let dx = p.x - d.start.x, dy = p.y - d.start.y;
+  if (!d.moved && Math.hypot(dx, dy) * LAYOUT.scale < 3) return; d.moved = true;
+  const snap = $("optSnap").checked, skip = new Set(d.orig.keys()); guidesClear();
+  if (d.mode === "move") {
+    const o = d.orig.get(d.id); let r = { x: o.x + dx, y: o.y + dy, w: o.w, h: o.h };
+    if (snap) {
+      r.x = Math.round(r.x / GRID) * GRID; r.y = Math.round(r.y / GRID) * GRID;
+      const sx = snapToOthers(r, skip, "x"), sy = snapToOthers(r, skip, "y");
+      if (sx) { r.x += sx.d; guide("v", sx.at); } if (sy) { r.y += sy.d; guide("hz", sy.at); }
+    }
+    dx = r.x - o.x; dy = r.y - o.y;
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const v of d.orig.values()) { minX = Math.min(minX, v.x); minY = Math.min(minY, v.y); maxX = Math.max(maxX, v.x + v.w); maxY = Math.max(maxY, v.y + v.h); }
+    dx = clamp(dx, -minX, baseW() - maxX); dy = clamp(dy, -minY, baseH() - maxY);
+    for (const [i, v] of d.orig) setEff(i, { ...v, x: v.x + dx, y: v.y + dy });
+  } else {
+    const o = d.orig.get(d.id), h = d.handle; let x1 = o.x, y1 = o.y, x2 = o.x + o.w, y2 = o.y + o.h;
+    const g = v => snap ? Math.round(v / GRID) * GRID : Math.round(v);
+    if (h.includes("w")) x1 = Math.min(g(o.x + dx), x2 - MIN_SIZE); if (h.includes("e")) x2 = Math.max(g(o.x + o.w + dx), x1 + MIN_SIZE);
+    if (h.includes("n")) y1 = Math.min(g(o.y + dy), y2 - MIN_SIZE); if (h.includes("s")) y2 = Math.max(g(o.y + o.h + dy), y1 + MIN_SIZE);
+    setEff(d.id, { ...o, x: x1, y: y1, w: x2 - x1, h: y2 - y1 });
+  }
+  refreshLayout();
+}
+function onUp() { if (!LAYOUT.drag) return; const m = LAYOUT.drag.moved; LAYOUT.drag = null; guidesClear(); if (m) commit(); else refreshLayout(); }
+function wireCanvas() {
+  const c = $("canvas");
+  c.addEventListener("pointerdown", ev => {
+    const handle = ev.target.closest(".h"), el = ev.target.closest(".el");
+    if (!el) { if (!ev.shiftKey) { selectOnly(null); refreshLayout(); } return; }
+    const id = el.dataset.id;
+    if (!handle) { if (ev.shiftKey) { LAYOUT.sel.has(id) ? LAYOUT.sel.delete(id) : LAYOUT.sel.add(id); } else if (!LAYOUT.sel.has(id)) selectOnly(id); else { LAYOUT.sel.delete(id); LAYOUT.sel.add(id); } }
+    refreshLayout();
+    if (!handle && !LAYOUT.sel.has(id)) return;
+    startDrag(ev, id, handle ? handle.dataset.h : null); ev.preventDefault();
+  });
+  window.addEventListener("pointermove", onMove); window.addEventListener("pointerup", onUp); window.addEventListener("pointercancel", onUp);
+  $("tree").addEventListener("click", ev => { const row = ev.target.closest(".tr"); if (!row) return;
+    if (ev.shiftKey) LAYOUT.sel.add(row.dataset.id); else selectOnly(row.dataset.id); refreshLayout(); });
+}
+function nudge(dx, dy) {
+  const ids = targetsOf(selected()); if (!ids.length) return;
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const i of ids) { const v = eff(i); minX = Math.min(minX, v.x); minY = Math.min(minY, v.y); maxX = Math.max(maxX, v.x + v.w); maxY = Math.max(maxY, v.y + v.h); }
+  dx = clamp(dx, -minX, baseW() - maxX); dy = clamp(dy, -minY, baseH() - maxY);
+  for (const i of ids) { const v = eff(i); setEff(i, { ...v, x: v.x + dx, y: v.y + dy }); }
+  commit();
+}
+function align(kind) {
+  const ids = selected(); if (ids.length < 2) return;
+  const rs = ids.map(i => [i, eff(i)]), minX = Math.min(...rs.map(([, r]) => r.x)), maxX = Math.max(...rs.map(([, r]) => r.x + r.w));
+  const minY = Math.min(...rs.map(([, r]) => r.y)), maxY = Math.max(...rs.map(([, r]) => r.y + r.h));
+  if (kind === "hdist" || kind === "vdist") {
+    if (ids.length < 3) return; const h = kind === "hdist", key = h ? "x" : "y", len = h ? "w" : "h";
+    rs.sort((a, b) => a[1][key] - b[1][key]);
+    const total = rs.reduce((s, [, r]) => s + r[len], 0), gap = ((h ? maxX - minX : maxY - minY) - total) / (rs.length - 1);
+    let pos = h ? minX : minY; for (const [i, r] of rs) { setEff(i, { ...r, [key]: pos }); pos += r[len] + gap; }
+  } else for (const [i, r] of rs) {
+    const n = { ...r };
+    if (kind === "left") n.x = minX; if (kind === "right") n.x = maxX - r.w; if (kind === "hcenter") n.x = (minX + maxX) / 2 - r.w / 2;
+    if (kind === "top") n.y = minY; if (kind === "bottom") n.y = maxY - r.h; if (kind === "vcenter") n.y = (minY + maxY) / 2 - r.h / 2;
+    setEff(i, n);
+  }
+  commit();
+}
+
+// ---- layout files ------------------------------------------------------------------------------------------------------
+function layoutJson() {
+  const elements = {}; for (const id of Object.keys(LAYOUT.layout).sort()) { const r = LAYOUT.layout[id]; elements[id] = r.visible === false ? { x: r.x, y: r.y, w: r.w, h: r.h, visible: false } : { x: r.x, y: r.y, w: r.w, h: r.h }; }
+  return JSON.stringify({ format: "plugin-layout", version: 1, plugin: LAYOUT.desc.plugin, name: cleanText($("layoutName").value, 48), baseWidth: baseW(), baseHeight: baseH(), elements }, null, 2) + "\n";
+}
+function readLayout(text) {
+  if (new TextEncoder().encode(text).length > MAX_LAYOUT_BYTES) throw new Error("The file is larger than 32 KiB.");
+  let o; try { o = JSON.parse(text); } catch { throw new Error("That is not valid JSON."); }
+  if (!o || typeof o !== "object" || Array.isArray(o)) throw new Error("The top level must be an object.");
+  if (o.format !== "plugin-layout") throw new Error('Missing "format": "plugin-layout".');
+  if (o.version !== 1) throw new Error("Unsupported version " + o.version + ".");
+  if (o.plugin !== LAYOUT.desc.plugin) throw new Error("This layout was made for another plug-in (" + cleanText(o.plugin, 48) + ").");
+  if (o.baseWidth !== baseW() || o.baseHeight !== baseH()) throw new Error("Made for a different window size.");
+  const name = cleanText(o.name, 48); if (!name) throw new Error('Missing "name".');
+  if (!o.elements || typeof o.elements !== "object" || Array.isArray(o.elements)) throw new Error('"elements" must be an object.');
+  const keys = Object.keys(o.elements); if (keys.length > MAX_LAYOUT_ENTRIES) throw new Error("Too many elements.");
+  const next = {}; let unknown = 0;
+  for (const id of keys) {
+    const e = o.elements[id];
+    if (!ID_RE.test(id)) throw new Error("Bad element id.");
+    if (!e || ![e.x, e.y, e.w, e.h].every(isNum)) throw new Error('Element "' + id + '" needs numbers x, y, w and h.');
+    if (e.visible !== undefined && typeof e.visible !== "boolean") throw new Error('"visible" of "' + id + '" must be true or false.');
+    if (!LAYOUT.defs.has(id)) { unknown++; continue; }
+    LAYOUT.layout = next; setEff(id, { x: e.x, y: e.y, w: e.w, h: e.h, visible: e.visible }); 
+  }
+  return { name, layout: next, unknown };
+}
+function loadLayout(text) {
+  try {
+    const keep = LAYOUT.layout; LAYOUT.layout = {};
+    let r; try { r = readLayout(text); } catch (e) { LAYOUT.layout = keep; throw e; }
+    LAYOUT.layout = r.layout; $("layoutName").value = r.name; LAYOUT.sel.clear(); commit();
+    lsay("Loaded \"" + r.name + "\"" + (r.unknown ? " (" + r.unknown + " unknown elements ignored)" : "") + ".", false);
+  } catch (e) { lsay(e.message, true); }
+}
+function downloadLayout() {
+  if ($("lDownload").disabled) return;
+  const blob = new Blob([layoutJson()], { type: "application/json" }), a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = slug($("layoutName").value) + ".json"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  lsay("Saved " + a.download + ". Put it in the layouts folder, then choose Reload layouts.", false);
+}
+
+// ---- wiring ---------------------------------------------------------------------------------------------------------------
+function setTab(which) {
+  const layout = which === "layout";
+  $("tabTheme").setAttribute("aria-selected", String(!layout)); $("tabLayout").setAttribute("aria-selected", String(layout));
+  $("themePane").hidden = layout; $("layoutPane").hidden = !layout; $("themeMain").hidden = layout; $("layoutMain").hidden = !layout;
+  fitStage();
+}
+function buildLayoutUi() {
+  $("descSelect").innerHTML = Object.keys(DESCRIPTORS).map(n => `<option>${n}</option>`).join("");
+  $("descSelect").addEventListener("change", e => useDescriptor(readDescriptor(JSON.stringify(DESCRIPTORS[e.target.value]))));
+  $("tabTheme").addEventListener("click", () => setTab("theme")); $("tabLayout").addEventListener("click", () => setTab("layout"));
+  $("openDesc").addEventListener("click", () => $("descFile").click());
+  $("descFile").addEventListener("change", e => { const f = e.target.files[0]; if (!f) return; if (f.size > MAX_DESC_BYTES) return lsay("The element list is larger than 128 KiB.", true);
+    f.text().then(t => { try { const d = readDescriptor(t); DESCRIPTORS[d.plugin] = d; $("descSelect").innerHTML = Object.keys(DESCRIPTORS).map(n => `<option>${n}</option>`).join(""); $("descSelect").value = d.plugin; useDescriptor(d); lsay("Loaded the elements of " + d.plugin + ".", false); } catch (err) { lsay(err.message, true); } }); e.target.value = ""; });
+  for (const [k, id] of [["x", "px"], ["y", "py"], ["w", "pw"], ["h", "ph"]]) $(id).addEventListener("change", e => {
+    const i = primary(); if (!i || selected().length !== 1) return; const v = +e.target.value; if (!isFinite(v)) return refreshLayout();
+    const targets = $("optGroup").checked && (k === "x" || k === "y") && LAYOUT.defs.get(i).type === "panel" ? targetsOf([i]) : [i], cur = eff(i), delta = v - cur[k];
+    for (const t of targets) { const r = eff(t); setEff(t, { ...r, [k]: t === i ? v : r[k] + delta }); } commit(); });
+  $("pvis").addEventListener("change", e => { for (const i of selected()) setEff(i, { ...eff(i), visible: e.target.checked }); commit(); });
+  $("aligns").addEventListener("click", e => { const a = e.target.dataset && e.target.dataset.a; if (a) align(a); });
+  $("resetSel").addEventListener("click", () => { for (const i of targetsOf(selected())) delete LAYOUT.layout[i]; commit(); });
+  $("resetAll").addEventListener("click", () => { if (changed().length && !confirm("Discard all changes to the layout?")) return; LAYOUT.layout = {}; commit(); });
+  $("undo").addEventListener("click", () => undoRedo(-1)); $("redo").addEventListener("click", () => undoRedo(+1));
+  for (const id of ["optSnap", "optIds", "optGroup"]) $(id).addEventListener("change", () => { $("canvas").classList.toggle("grid", $("optSnap").checked); refreshLayout(); });
+  $("layoutName").addEventListener("input", refreshLayout);
+  $("lDownload").addEventListener("click", downloadLayout);
+  $("lCopy").addEventListener("click", async () => { if ($("lCopy").disabled) return; try { await navigator.clipboard.writeText(layoutJson()); lsay("JSON copied.", false); } catch { lsay("Could not copy: use Download instead.", true); } });
+  $("lOpen").addEventListener("click", () => $("lFile").click());
+  $("lFile").addEventListener("change", e => { const f = e.target.files[0]; if (!f) return; if (f.size > MAX_LAYOUT_BYTES) return lsay("The file is larger than 32 KiB.", true); f.text().then(loadLayout); e.target.value = ""; });
+  document.addEventListener("keydown", ev => {
+    if ($("layoutPane").hidden || /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return;
+    const k = ev.key, step = ev.shiftKey ? 10 : 1;
+    if ((ev.ctrlKey || ev.metaKey) && k.toLowerCase() === "z") { ev.preventDefault(); undoRedo(ev.shiftKey ? +1 : -1); }
+    else if ((ev.ctrlKey || ev.metaKey) && k.toLowerCase() === "y") { ev.preventDefault(); undoRedo(+1); }
+    else if ((ev.ctrlKey || ev.metaKey) && k.toLowerCase() === "a") { ev.preventDefault(); LAYOUT.sel = new Set(LAYOUT.desc.elements.filter(e => e.type !== "panel").map(e => e.id)); refreshLayout(); }
+    else if (k === "Escape") { selectOnly(null); refreshLayout(); }
+    else if (k === "ArrowLeft") { ev.preventDefault(); nudge(-step, 0); } else if (k === "ArrowRight") { ev.preventDefault(); nudge(step, 0); }
+    else if (k === "ArrowUp") { ev.preventDefault(); nudge(0, -step); } else if (k === "ArrowDown") { ev.preventDefault(); nudge(0, step); }
+    else if (k === "h" || k === "H" || k === "Delete") { const ids = selected().filter(i => !LAYOUT.defs.get(i).locked); if (ids.length) { const vis = ids.every(i => eff(i).visible === false); for (const i of ids) setEff(i, { ...eff(i), visible: vis }); commit(); } }
+  });
+  wireCanvas();
+  useDescriptor(readDescriptor(JSON.stringify(DESCRIPTORS.Solomon)));
+}
+function applyCanvasVars() {
+  const c = $("canvas"); if (!c) return;
+  for (const [k] of FIELDS) if (hexOk(state[k])) c.style.setProperty("--" + k, state[k]);
+  c.style.setProperty("--radius", state.radius + "px");
+}
+
+buildControls(); buildPreview(); buildLayoutUi(); refresh(false); fitStage();
 </script>
 </body>
 </html>

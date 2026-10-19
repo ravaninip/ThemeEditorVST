@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ravaninip/ThemeEditorVST/blob/main/descriptor.schema.json",
+  "title": "Plug-in element list",
+  "type": "object",
+  "required": [
+    "format",
+    "version",
+    "plugin",
+    "baseWidth",
+    "baseHeight",
+    "elements"
+  ],
+  "properties": {
+    "format": {
+      "const": "plugin-layout-descriptor"
+    },
+    "version": {
+      "const": 1
+    },
+    "plugin": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 48
+    },
+    "baseWidth": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 4000
+    },
+    "baseHeight": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 4000
+    },
+    "elements": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 512,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "x",
+          "y",
+          "w",
+          "h"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._-]{1,64}$"
+          },
+          "type": {
+            "enum": [
+              "panel",
+              "label",
+              "knob",
+              "slider",
+              "menu",
+              "graph",
+              "meter",
+              "group"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "param": {
+            "type": "string"
+          },
+          "parent": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._-]{1,64}$"
+          },
+          "locked": {
+            "type": "boolean"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "w": {
+            "type": "number"
+          },
+          "h": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}

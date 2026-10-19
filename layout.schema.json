@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ravaninip/ThemeEditorVST/blob/main/layout.schema.json",
+  "title": "Plug-in layout",
+  "type": "object",
+  "required": [
+    "format",
+    "version",
+    "plugin",
+    "name",
+    "baseWidth",
+    "baseHeight",
+    "elements"
+  ],
+  "properties": {
+    "format": {
+      "const": "plugin-layout"
+    },
+    "version": {
+      "const": 1
+    },
+    "plugin": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 48
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 48
+    },
+    "baseWidth": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 4000
+    },
+    "baseHeight": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 4000
+    },
+    "elements": {
+      "type": "object",
+      "maxProperties": 256,
+      "propertyNames": {
+        "pattern": "^[A-Za-z0-9._-]{1,64}$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "x",
+          "y",
+          "w",
+          "h"
+        ],
+        "properties": {
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "w": {
+            "type": "number"
+          },
+          "h": {
+            "type": "number"
+          },
+          "visible": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "description": "Structure only. Plug-ins additionally require plugin and base size to match, clamp rectangles into the window (minimum 12 x 12) and refuse files larger than 32 KiB."
+}

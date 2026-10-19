@@ -9,6 +9,7 @@ days.
 ## Scope
 
 The Theme Studio is a static page that runs entirely in the browser: it loads no external code, makes no network
-requests and stores nothing. The relevant risks are therefore a malicious theme file (handled by strict
-validation and size limits, both here and in the plug-ins that load themes) and anything that would make the page
+requests and stores nothing. The relevant risks are therefore a malicious theme, layout or element-list file (handled by strict
+validation and size limits, both here and in the plug-ins that load them; labels from files are only ever shown
+as text, never as HTML) and anything that would make the page
 load or run code from elsewhere.
