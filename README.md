@@ -34,7 +34,7 @@ colour. The preview on the right updates as you type. When the readability check
 
 ## What you can change
 
-**Theme tab:** eleven colours (window, panels, wells, accent, warm, text, dim text, edges, controls, control edge,
+**Theme tab:** the palette generator also offers colour harmonies (contrasting, complementary, analogous, triadic, same hue) and the readability list tells *OK* from *good* (4.5:1 or more for text). Eleven colours (window, panels, wells, accent, warm, text, dim text, edges, controls, control edge,
 danger) and the corner radius of the panels.
 
 **Layout tab:** the position, size and visibility of every element of the plug-in's interface.
@@ -51,6 +51,10 @@ danger) and the corner radius of the panels.
 - **Hide** an element with `H` or the *Visible* box; hidden elements stay on the canvas, dimmed. Elements that would
   hide the controls needed to switch the layout are *locked* and cannot be hidden.
 - **Undo / redo** (Ctrl+Z, Ctrl+Y), *Reset selected*, *Reset all*.
+- The **Design check** looks at what you changed and points out, with a *Show* and often a *Fix* button: sizes that
+  are almost the same but not quite (a few pixels look like a mistake), controls too small to grab comfortably,
+  elements that overlap or almost touch, uneven spacing in a row or column, things sticking out of their panel and
+  near-misses in alignment. They are advice, not rules: a deliberate exception is fine.
 - Overlapping elements get a red outline, and the colours of the Theme tab apply to the canvas, so you see theme
   and layout together.
 - Only the elements you changed are saved, so a layout keeps working when a plug-in adds controls.
