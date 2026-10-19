@@ -1,0 +1,21 @@
+{
+  "format": "plugin-theme",
+  "version": 1,
+  "name": "Midnight",
+  "colors": {
+    "background": "#161a20",
+    "panel": "#1d232b",
+    "well": "#12161b",
+    "accent": "#3ddc97",
+    "warm": "#ffa94d",
+    "text": "#e6ebf0",
+    "dim": "#8b97a5",
+    "edge": "#2c343e",
+    "control": "#232a33",
+    "controlEdge": "#343d49",
+    "danger": "#ff5d5d"
+  },
+  "metrics": {
+    "panelRadius": 8
+  }
+}

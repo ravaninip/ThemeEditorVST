@@ -1,0 +1,21 @@
+{
+  "format": "plugin-theme",
+  "version": 1,
+  "name": "Amber",
+  "colors": {
+    "background": "#140f08",
+    "panel": "#1d160b",
+    "well": "#0f0b05",
+    "accent": "#ffb000",
+    "warm": "#ff6b35",
+    "text": "#f5e6c8",
+    "dim": "#a08a62",
+    "edge": "#3a2e14",
+    "control": "#261d0e",
+    "controlEdge": "#4a3a18",
+    "danger": "#ff4d4d"
+  },
+  "metrics": {
+    "panelRadius": 4
+  }
+}

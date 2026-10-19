@@ -1,0 +1,21 @@
+{
+  "format": "plugin-theme",
+  "version": 1,
+  "name": "Paper",
+  "colors": {
+    "background": "#f3f1ec",
+    "panel": "#ffffff",
+    "well": "#e8e5df",
+    "accent": "#0f8a5f",
+    "warm": "#c26a00",
+    "text": "#1b1f24",
+    "dim": "#5d6672",
+    "edge": "#d5d1c8",
+    "control": "#f7f6f2",
+    "controlEdge": "#c9c4b8",
+    "danger": "#c62828"
+  },
+  "metrics": {
+    "panelRadius": 8
+  }
+}

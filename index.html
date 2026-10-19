@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theme Studio</title>
+<!-- Theme Studio: design a colour theme for the plug-in, see it live, export the JSON file.
+     One self-contained file: no network access, no dependencies. Format: docs/THEMES.md -->
+<style>
+:root {
+  --ui-bg: #14161a; --ui-panel: #1c1f25; --ui-edge: #2b3038; --ui-text: #e8ebef; --ui-dim: #98a1ad;
+  --ui-accent: #6aa8ff; --ui-bad: #ff6b6b; --ui-good: #4cd18a;
+}
+@media (prefers-color-scheme: light) {
+  :root { --ui-bg: #f3f4f6; --ui-panel: #ffffff; --ui-edge: #d9dde3; --ui-text: #16191d; --ui-dim: #5b6572;
+          --ui-accent: #1f6feb; --ui-bad: #c62828; --ui-good: #1b7f4b; }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--ui-bg); color: var(--ui-text); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.app { display: grid; grid-template-columns: 340px minmax(0, 1fr); min-height: 100vh; }
+aside { background: var(--ui-panel); border-right: 1px solid var(--ui-edge); padding: 16px; overflow-y: auto; max-height: 100vh; position: sticky; top: 0; }
+main { padding: 16px; min-width: 0; }
+h1 { font-size: 18px; margin: 0 0 2px; }
+h2 { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ui-dim); margin: 20px 0 8px; font-weight: 600; }
+p.hint { margin: 0 0 8px; color: var(--ui-dim); font-size: 12.5px; }
+label { display: block; font-size: 12.5px; color: var(--ui-dim); margin-bottom: 3px; }
+input[type=text], select, textarea { width: 100%; background: var(--ui-bg); color: var(--ui-text); border: 1px solid var(--ui-edge);
+  border-radius: 6px; padding: 7px 9px; font: inherit; }
+input[type=range] { width: 100%; }
+button { font: inherit; color: var(--ui-text); background: var(--ui-bg); border: 1px solid var(--ui-edge); border-radius: 6px; padding: 7px 11px; cursor: pointer; }
+button:hover:not(:disabled) { border-color: var(--ui-accent); }
+button.primary { background: var(--ui-accent); border-color: var(--ui-accent); color: #fff; font-weight: 600; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+:focus-visible { outline: 2px solid var(--ui-accent); outline-offset: 2px; }
+.row { display: flex; gap: 6px; flex-wrap: wrap; }
+.row > * { flex: 1 1 auto; }
+.colour { display: grid; grid-template-columns: 38px 1fr 84px; gap: 8px; align-items: center; margin-bottom: 7px; }
+.colour input[type=color] { width: 38px; height: 30px; padding: 0; border: 1px solid var(--ui-edge); border-radius: 6px; background: none; cursor: pointer; }
+.colour .name { font-size: 13px; color: var(--ui-text); line-height: 1.2; }
+.colour .name small { display: block; color: var(--ui-dim); font-size: 11.5px; }
+.colour input[type=text] { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; padding: 5px 7px; }
+.colour input.bad { border-color: var(--ui-bad); }
+.checks { list-style: none; margin: 0; padding: 0; font-size: 12.5px; }
+.checks li { display: flex; justify-content: space-between; gap: 8px; padding: 3px 0; border-bottom: 1px dashed var(--ui-edge); }
+.checks .ok { color: var(--ui-good); } .checks .no { color: var(--ui-bad); font-weight: 600; }
+.msg { font-size: 12.5px; margin-top: 8px; min-height: 18px; }
+.msg.bad { color: var(--ui-bad); } .msg.good { color: var(--ui-good); }
+.where { font-size: 12.5px; color: var(--ui-dim); }
+.where code { background: var(--ui-bg); padding: 1px 5px; border-radius: 4px; word-break: break-all; }
+details { margin-top: 12px; } summary { cursor: pointer; color: var(--ui-dim); font-size: 12.5px; }
+textarea { min-height: 120px; font-family: ui-monospace, Consolas, monospace; font-size: 12px; margin-top: 6px; }
+.stage { width: 100%; overflow: hidden; border-radius: 10px; border: 1px solid var(--ui-edge); background: #000; }
+.stage-inner { transform-origin: top left; width: 980px; height: 720px; }
+
+/* ---- the plug-in preview; every colour comes from the theme variables ---- */
+.plugin { --bg:#161a20; --panel:#1d232b; --well:#12161b; --accent:#3ddc97; --warm:#ffa94d; --text:#e6ebf0; --dim:#8b97a5;
+  --edge:#2c343e; --control:#232a33; --controlEdge:#343d49; --danger:#ff5d5d; --radius:8px;
+  width: 980px; height: 720px; background: var(--bg); color: var(--text); padding: 14px; display: grid; gap: 8px;
+  grid-template-rows: 74px 1fr 0.62fr 0.9fr; font: 12px/1.2 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; user-select: none; }
+.plugin .top { display: grid; grid-template-columns: 150px 330px 230px 1fr 90px; gap: 12px; align-items: start; }
+.plugin .title { font-size: 26px; font-weight: 700; color: var(--accent); line-height: 44px; }
+.plugin .combo { height: 26px; background: var(--control); border: 1px solid var(--controlEdge); border-radius: 4px; color: var(--text);
+  display: flex; align-items: center; justify-content: space-between; padding: 0 9px; font-size: 13px; }
+.plugin .combo::after { content: ""; width: 7px; height: 7px; border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(45deg) translate(-2px,-2px); }
+.plugin .presetline { display: grid; grid-template-columns: 30px 1fr 62px 30px; gap: 4px; margin-top: 4px; }
+.plugin .btn { height: 32px; background: var(--control); border: 1px solid var(--controlEdge); border-radius: 4px; display: grid; place-items: center; font-size: 13px; }
+.plugin .presetline .combo { height: 32px; }
+.plugin .lbl { color: var(--dim); font-size: 11px; margin: 4px 0 2px; }
+.plugin .vol { text-align: center; color: var(--dim); }
+.plugin .vol b { display: block; color: var(--text); font-weight: 400; font-size: 13px; margin-top: 2px; }
+.plugin .meter { margin-top: 28px; height: 8px; background: var(--well); border-radius: 4px; position: relative; }
+.plugin .meter i { position: absolute; inset: 0 auto 0 0; width: 55%; border-radius: 4px; background: var(--accent); }
+.plugin .meter i.hot { left: 80%; width: 6%; background: var(--danger); border-radius: 0 4px 4px 0; }
+.plugin .row1 { display: grid; grid-template-columns: 36fr 42fr 22fr; gap: 8px; min-height: 0; }
+.plugin .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; min-height: 0; }
+.plugin .panel { background: var(--panel); border-radius: var(--radius); padding: 0 8px; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.plugin .head { height: 26px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 0 2px; color: var(--accent); font-weight: 700; font-size: 12.5px; }
+.plugin .head .combo { font-weight: 400; height: 22px; font-size: 12px; min-width: 108px; }
+.plugin .knobs { display: flex; flex: 1; min-height: 0; }
+.plugin .kn { flex: 1; display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.plugin .kn .lbl { margin: 0; }
+.plugin .kn svg { flex: 1; min-height: 0; width: 100%; }
+.plugin .kn .val { color: var(--text); font-size: 13px; padding-bottom: 4px; }
+.plugin .graph { background: var(--well); border-radius: 5px; margin: 2px 2px 4px; flex: none; }
+.plugin .graph svg { display: block; width: 100%; height: 100%; }
+.plugin .envbody { display: flex; flex: 1; min-height: 0; }
+.plugin .envbody .knobs { flex: 64; } .plugin .envbody .graph { flex: 36; margin: 6px; }
+.plugin .matrix { background: var(--panel); border-radius: var(--radius); padding: 0 10px 6px; display: flex; flex-direction: column; min-height: 0; }
+.plugin .mhead { height: 26px; display: flex; align-items: center; color: var(--accent); font-weight: 700; font-size: 12.5px; flex: none; }
+.plugin .mhead span { font-weight: 700; margin-left: 12px; }
+.plugin .grid { flex: 1; display: grid; grid-template-columns: 110px repeat(4, 1fr); grid-template-rows: 18px repeat(4, 1fr); align-items: center; }
+.plugin .grid .dst { text-align: center; color: var(--dim); }
+.plugin .grid .src { color: var(--dim); font-size: 12px; }
+.plugin .src small { display: block; height: 6px; margin-top: 4px; margin-right: 8px; background: var(--well); border-radius: 3px; }
+.plugin .cell { display: grid; grid-template-columns: 1fr 44px; gap: 6px; align-items: center; padding: 0 8px; }
+.plugin .cell .tr { height: 6px; background: var(--well); border-radius: 3px; position: relative; }
+.plugin .cell .tr::before { content: ""; position: absolute; left: 50%; top: -3px; width: 1px; height: 12px; background: var(--dim); }
+.plugin .cell .tr i { position: absolute; top: 0; height: 6px; background: var(--accent); }
+.plugin .cell .tr i.neg { background: var(--warm); }
+.plugin .cell .tr b { position: absolute; top: -2px; width: 10px; height: 10px; border-radius: 50%; background: var(--dim); margin-left: -5px; }
+.plugin .cell .tr b.on { background: var(--text); }
+.plugin .cell span { color: var(--text); font-size: 13px; text-align: right; }
+
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; } aside { position: static; max-height: none; border-right: 0; border-bottom: 1px solid var(--ui-edge); }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <h1>Theme Studio</h1>
+    <p class="hint">Design the colours of the plug-in, check them live, then save the theme file.</p>
+
+    <h2>Start from</h2>
+    <div class="row" id="builtins"></div>
+
+    <h2>Quick palette</h2>
+    <p class="hint">Pick a main colour and a style to generate a whole palette. Fine-tune it below.</p>
+    <div class="colour" style="grid-template-columns:38px 1fr 110px">
+      <input type="color" id="genAccent" value="#3ddc97" aria-label="Main colour">
+      <span class="name">Main colour</span>
+      <select id="genMode" aria-label="Style"><option value="dark">Dark</option><option value="light">Light</option></select>
+    </div>
+    <button id="generate" style="width:100%">Generate palette</button>
+
+    <h2>Name</h2>
+    <input type="text" id="name" maxlength="48" aria-label="Theme name" value="My theme">
+
+    <h2>Colours</h2>
+    <div id="colours"></div>
+
+    <h2>Shape</h2>
+    <label for="radius">Panel corner radius: <span id="radiusVal">8</span> px</label>
+    <input type="range" id="radius" min="0" max="24" step="1" value="8">
+
+    <h2>Readability</h2>
+    <p class="hint">The plug-in refuses themes it cannot display legibly, so a bad theme can never hide the theme menu.</p>
+    <ul class="checks" id="checks"></ul>
+
+    <h2>Save</h2>
+    <div class="row">
+      <button class="primary" id="download">Download theme file</button>
+      <button id="copy">Copy JSON</button>
+    </div>
+    <div class="msg" id="msg" role="status"></div>
+    <p class="where">Put the file in the plug-in's themes folder: choose <b>Open themes folder…</b> in the plug-in's theme menu, or use<br>
+      Windows <code>%APPDATA%\Solomon\Themes</code><br>
+      macOS <code>~/Library/Application Support/Solomon/Themes</code><br>
+      then choose <b>Reload themes</b>.</p>
+
+    <details id="importBox">
+      <summary>Open an existing theme file</summary>
+      <div class="row" style="margin-top:8px"><button id="openFile">Choose a .json file…</button></div>
+      <input type="file" id="file" accept=".json,application/json" hidden>
+      <label for="paste" style="margin-top:8px">…or paste its content</label>
+      <textarea id="paste" spellcheck="false" placeholder='{ "format": "plugin-theme", "version": 1, ... }'></textarea>
+      <button id="loadPaste" style="margin-top:6px">Load pasted theme</button>
+    </details>
+  </aside>
+
+  <main>
+    <div class="stage" id="stage" aria-label="Live preview of the plug-in"><div class="stage-inner" id="inner"></div></div>
+    <p class="hint" style="margin-top:8px">Preview of Solomon. Colours, graphs and the corner radius follow your edits instantly; values shown are examples.</p>
+  </main>
+</div>
+
+<script>
+"use strict";
+// ---- the format (keep in step with Source/Theme.cpp and docs/THEMES.md) -------------------------
+const FORMAT = "plugin-theme", VERSION = 1, MAX_BYTES = 8 * 1024, MAX_NAME = 48, MAX_RADIUS = 24;
+const FIELDS = [
+  ["background", "Window", "behind everything"], ["panel", "Panels", "the sections"], ["well", "Wells", "graphs, meters, slider tracks"],
+  ["accent", "Accent", "headers, knob arcs, curves"], ["warm", "Warm", "negative modulation"], ["text", "Text", "values and menus"],
+  ["dim", "Dim text", "labels and scales"], ["edge", "Edges", "grid lines, knob tracks"], ["control", "Controls", "menus, buttons, tooltips"],
+  ["controlEdge", "Control edge", "outline of menus"], ["danger", "Danger", "clipping"],
+];
+const BUILT_IN = {
+  Midnight: { background:"#161a20", panel:"#1d232b", well:"#12161b", accent:"#3ddc97", warm:"#ffa94d", text:"#e6ebf0", dim:"#8b97a5", edge:"#2c343e", control:"#232a33", controlEdge:"#343d49", danger:"#ff5d5d", radius: 8 },
+  Paper:    { background:"#f3f1ec", panel:"#ffffff", well:"#e8e5df", accent:"#0f8a5f", warm:"#c26a00", text:"#1b1f24", dim:"#5d6672", edge:"#d5d1c8", control:"#f7f6f2", controlEdge:"#c9c4b8", danger:"#c62828", radius: 8 },
+  Amber:    { background:"#140f08", panel:"#1d160b", well:"#0f0b05", accent:"#ffb000", warm:"#ff6b35", text:"#f5e6c8", dim:"#a08a62", edge:"#3a2e14", control:"#261d0e", controlEdge:"#4a3a18", danger:"#ff4d4d", radius: 4 },
+};
+const RULES = [  // [label, foreground, background, minimum contrast]
+  ["Text on window", "text", "background", 3], ["Text on panels", "text", "panel", 3], ["Text on controls", "text", "control", 3],
+  ["Accent on panels", "accent", "panel", 2], ["Dim text on panels", "dim", "panel", 1.8],
+];
+
+// ---- colour maths ---------------------------------------------------------------------------------
+const hexOk = s => /^#[0-9a-fA-F]{6}$/.test(s);
+const rgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
+const lin = v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+const lum = h => { const [r, g, b] = rgb(h).map(lin); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+const contrast = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+function hsl(h, s, l) {           // h 0-360, s/l 0-100 -> "#rrggbb"
+  s /= 100; l /= 100;
+  const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l);
+  const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+  return "#" + [f(0), f(8), f(4)].map(v => Math.round(v * 255).toString(16).padStart(2, "0")).join("");
+}
+function toHsl(hex) {
+  const [r, g, b] = rgb(hex), mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn, l = (mx + mn) / 2;
+  let h = 0;
+  if (d) h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return [(h * 60 + 360) % 360, d ? d / (1 - Math.abs(2 * l - 1)) * 100 : 0, l * 100];
+}
+
+// ---- state -----------------------------------------------------------------------------------------
+const state = { name: "My theme", radius: 8, ...BUILT_IN.Midnight };
+const $ = id => document.getElementById(id);
+const cleanName = s => [...String(s)].filter(c => c.codePointAt(0) >= 32 && c.codePointAt(0) !== 127).join("").trim().slice(0, MAX_NAME).trim();
+
+function toTheme() {
+  const colors = {};
+  for (const [k] of FIELDS) colors[k] = state[k].toLowerCase();
+  return { format: FORMAT, version: VERSION, name: cleanName(state.name), colors, metrics: { panelRadius: state.radius } };
+}
+function problems() {
+  const out = [];
+  if (!cleanName(state.name)) out.push("Give the theme a name.");
+  for (const [k, label] of FIELDS) if (!hexOk(state[k])) out.push(label + " is not a valid #rrggbb colour.");
+  if (out.length) return out;
+  for (const [label, fg, bg, need] of RULES) {
+    const c = contrast(state[fg], state[bg]);
+    if (c < need) out.push(`${label}: contrast ${c.toFixed(1)}:1, needs ${need}:1`);
+  }
+  return out;
+}
+
+// ---- reading a theme file (same rules as the plug-in) ------------------------------------------------
+function readTheme(text) {
+  if (new TextEncoder().encode(text).length > MAX_BYTES) throw new Error("The file is larger than 8 KiB.");
+  let o; try { o = JSON.parse(text); } catch { throw new Error("That is not valid JSON."); }
+  if (!o || typeof o !== "object" || Array.isArray(o)) throw new Error("The top level must be an object.");
+  if (o.format !== FORMAT) throw new Error('Missing "format": "plugin-theme".');
+  if (!Number.isInteger(o.version)) throw new Error('Missing integer "version".');
+  if (o.version !== VERSION) throw new Error("Unsupported version " + o.version + ".");
+  const name = cleanName(typeof o.name === "string" ? o.name : "");
+  if (!name) throw new Error('Missing "name".');
+  const next = { ...BUILT_IN.Midnight, name };
+  if (o.colors !== undefined) {
+    if (!o.colors || typeof o.colors !== "object" || Array.isArray(o.colors)) throw new Error('"colors" must be an object.');
+    for (const [k] of FIELDS) if (o.colors[k] !== undefined) {
+      if (typeof o.colors[k] !== "string" || !hexOk(o.colors[k])) throw new Error(`Colour "${k}" must look like "#rrggbb".`);
+      next[k] = o.colors[k].toLowerCase();
+    }
+  }
+  if (o.metrics !== undefined) {
+    if (!o.metrics || typeof o.metrics !== "object" || Array.isArray(o.metrics)) throw new Error('"metrics" must be an object.');
+    if (o.metrics.panelRadius !== undefined) {
+      if (typeof o.metrics.panelRadius !== "number" || !isFinite(o.metrics.panelRadius)) throw new Error('"panelRadius" must be a number.');
+      next.radius = Math.max(0, Math.min(MAX_RADIUS, o.metrics.panelRadius));
+    }
+  }
+  return next;
+}
+
+// ---- preview -----------------------------------------------------------------------------------------
+const arc = (cx, cy, r, a0, a1) => {
+  const p = a => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+  const [x0, y0] = p(a0), [x1, y1] = p(a1);
+  return `M${x0.toFixed(1)} ${y0.toFixed(1)} A${r} ${r} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`;
+};
+function knob(label, value, text) {
+  const a0 = -2.35, a1 = 2.35, a = a0 + (a1 - a0) * value, r = 24, cx = 40, cy = 40;
+  const tx = cx + r * Math.sin(a), ty = cy - r * Math.cos(a);
+  return `<div class="kn"><div class="lbl">${label}</div>
+    <svg viewBox="0 0 80 80" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <path d="${arc(cx, cy, r, a0, a1)}" fill="none" stroke="var(--edge)" stroke-width="5" stroke-linecap="round"/>
+      <path d="${arc(cx, cy, r, a0, a)}" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="6.5" fill="var(--text)"/></svg>
+    <div class="val">${text}</div></div>`;
+}
+function filterSvg() {
+  const pts = (fc, q) => { let d = ""; for (let i = 0; i <= 120; i++) {
+    const f = 20 * Math.pow(1000, i / 120), x = f / fc, mag = 1 / Math.sqrt(Math.pow(1 - x * x, 2) + Math.pow(x / q, 2));
+    const db = Math.max(-42, Math.min(24, 20 * Math.log10(mag + 1e-6)));
+    d += (i ? "L" : "M") + (i / 120 * 372).toFixed(1) + " " + (88 - (db + 42) / 66 * 88).toFixed(1); } return d; };
+  const grid = [100, 1000, 10000].map(f => `<line x1="${(Math.log(f / 20) / Math.log(1000) * 372).toFixed(1)}" x2="${(Math.log(f / 20) / Math.log(1000) * 372).toFixed(1)}" y1="0" y2="88" stroke="var(--edge)" stroke-opacity=".7"/>`).join("")
+    + [-24, -12, 0, 12].map(d => `<line x1="0" x2="372" y1="${(88 - (d + 42) / 66 * 88).toFixed(1)}" y2="${(88 - (d + 42) / 66 * 88).toFixed(1)}" stroke="var(--edge)" stroke-opacity=".7"/>`).join("");
+  const labels = [["100", 100], ["1k", 1000], ["10k", 10000]].map(([t, f]) => `<text x="${(Math.log(f / 20) / Math.log(1000) * 372 + 3).toFixed(1)}" y="84" font-size="9" fill="var(--dim)">${t}</text>`).join("");
+  return `<svg viewBox="0 0 372 88" preserveAspectRatio="none" aria-hidden="true">${grid}${labels}
+    <path d="${pts(3200, 0.9)}" fill="none" stroke="var(--accent)" stroke-opacity=".35" stroke-width="1.3"/>
+    <path d="${pts(2300, 1.4)}" fill="none" stroke="var(--accent)" stroke-width="1.8"/></svg>`;
+}
+function envSvg(a, d, s, r) {
+  const W = 150, H = 100, x1 = 6 + a * 40, x2 = x1 + 10 + d * 40, sy = H - 8 - s * (H - 20), x3 = 100, x4 = x3 + 8 + r * 30;
+  const line = `M6 ${H - 6} L${x1} 10 Q${x1 + 6} ${sy - 2} ${x2} ${sy} L${x3} ${sy} Q${x3 + 4} ${H - 8} ${x4} ${H - 6}`;
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">
+    <path d="${line} L6 ${H - 6}Z" fill="var(--accent)" fill-opacity=".14"/>
+    <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="1.8"/>
+    <line x1="${x3}" x2="${x3}" y1="4" y2="${H - 4}" stroke="var(--dim)" stroke-opacity=".6"/></svg>`;
+}
+function matrixRows() {
+  const srcs = ["LFO", "Envelope", "Velocity", "Pressure"], dsts = ["Timbre", "Morph", "Harmonics", "Cutoff"];
+  const val = { "0,0": 0.6, "1,3": 0.4, "3,3": -0.4 };
+  let h = `<div></div>` + dsts.map(d => `<div class="dst">${d}</div>`).join("");
+  srcs.forEach((s, si) => {
+    h += `<div class="src">${s}<small></small></div>`;
+    dsts.forEach((d, di) => {
+      const v = val[si + "," + di] || 0, w = Math.abs(v) * 50;
+      const bar = v ? `<i class="${v < 0 ? "neg" : ""}" style="left:${v < 0 ? 50 - w : 50}%;width:${w}%"></i>` : "";
+      h += `<div class="cell"><div class="tr">${bar}<b class="${v ? "on" : ""}" style="left:${50 + v * 50}%"></b></div><span>${v >= 0 ? "+" : "-"}${Math.abs(v).toFixed(2)}</span></div>`;
+    });
+  });
+  return h;
+}
+function buildPreview() {
+  $("inner").innerHTML = `<div class="plugin" id="plugin">
+    <div class="top">
+      <div><div class="title">Solomon</div><div class="combo" style="width:142px"><span id="pvTheme"></span></div></div>
+      <div><div class="presetline"><div class="btn">&lt;</div><div class="combo"><span>Init</span></div><div class="btn">Save</div><div class="btn">&gt;</div></div></div>
+      <div><div class="lbl">Oscillator model</div><div class="combo" style="height:30px"><span>FM</span></div></div>
+      <div class="meter" aria-hidden="true"><i></i><i class="hot"></i></div>
+      <div class="vol"><div>Volume</div><svg viewBox="0 0 80 80" width="38" height="38" aria-hidden="true"><path d="${arc(40, 40, 24, -2.35, 2.35)}" fill="none" stroke="var(--edge)" stroke-width="9" stroke-linecap="round"/><path d="${arc(40, 40, 24, -2.35, 0.9)}" fill="none" stroke="var(--accent)" stroke-width="9" stroke-linecap="round"/></svg><b>0.70</b></div>
+    </div>
+    <div class="row1">
+      <div class="panel"><div class="head">OSCILLATOR</div><div class="knobs">${knob("Ratio", .5, "0.50")}${knob("FM Amount", .5, "0.50")}${knob("Feedback", .5, "0.50")}${knob("Tune", .5, "+0.0 st")}</div></div>
+      <div class="panel"><div class="head">FILTER<div class="combo"><span>Low-pass</span></div></div>
+        <div class="graph" style="height:45%">${filterSvg()}</div><div class="knobs">${knob("Cutoff", .72, "8.00 kHz")}${knob("Resonance", .15, "0.15")}</div></div>
+      <div class="panel"><div class="head">LFO<div class="combo"><span>Sine</span></div></div><div class="knobs">${knob("Rate", .3, "2.00 Hz")}</div></div>
+    </div>
+    <div class="row2">
+      <div class="panel"><div class="head">AMP ENVELOPE</div><div class="envbody"><div class="knobs">${knob("A", .05, "5 ms")}${knob("D", .55, "400 ms")}${knob("S", .8, "0.80")}${knob("R", .35, "250 ms")}</div><div class="graph">${envSvg(.1, .5, .8, .4)}</div></div></div>
+      <div class="panel"><div class="head">FILTER ENVELOPE</div><div class="envbody"><div class="knobs">${knob("A", .05, "5 ms")}${knob("D", .6, "500 ms")}${knob("S", .2, "0.20")}${knob("R", .4, "300 ms")}</div><div class="graph">${envSvg(.05, .6, .2, .5)}</div></div></div>
+    </div>
+    <div class="matrix"><div class="mhead">MODULATION MATRIX<span>(the bars on the left show each source live)</span></div><div class="grid">${matrixRows()}</div></div>
+  </div>`;
+}
+function applyPreview() {
+  const p = $("plugin"); if (!p) return;
+  for (const [k] of FIELDS) if (hexOk(state[k])) p.style.setProperty("--" + k, state[k]);
+  p.style.setProperty("--radius", state.radius + "px");
+  $("pvTheme").textContent = cleanName(state.name) || "Theme";
+}
+function fitStage() {
+  const w = $("stage").clientWidth, s = w / 980;
+  $("inner").style.transform = `scale(${s})`;
+  $("stage").style.height = Math.round(720 * s) + "px";
+}
+
+// ---- controls ----------------------------------------------------------------------------------------
+function buildControls() {
+  $("colours").innerHTML = FIELDS.map(([k, label, what]) => `<div class="colour">
+    <input type="color" id="c_${k}" aria-label="${label} colour">
+    <span class="name">${label}<small>${what}</small></span>
+    <input type="text" id="t_${k}" maxlength="7" spellcheck="false" aria-label="${label} hex value"></div>`).join("");
+  for (const [k] of FIELDS) {
+    $("c_" + k).addEventListener("input", e => { state[k] = e.target.value; refresh(true); });
+    $("t_" + k).addEventListener("input", e => {
+      let v = e.target.value.trim(); if (v && v[0] !== "#") v = "#" + v;
+      e.target.classList.toggle("bad", !hexOk(v));
+      if (hexOk(v)) { state[k] = v.toLowerCase(); refresh(true); }
+    });
+  }
+  $("builtins").innerHTML = Object.keys(BUILT_IN).map(n => `<button data-theme="${n}">${n}</button>`).join("");
+  $("builtins").addEventListener("click", e => {
+    const n = e.target.dataset && e.target.dataset.theme; if (!n) return;
+    Object.assign(state, BUILT_IN[n], { name: n + " copy" }); refresh(false);
+  });
+  $("name").addEventListener("input", e => { state.name = e.target.value; refresh(true); });
+  $("radius").addEventListener("input", e => { state.radius = +e.target.value; refresh(true); });
+  $("generate").addEventListener("click", generate);
+  $("download").addEventListener("click", download);
+  $("copy").addEventListener("click", copyJson);
+  $("openFile").addEventListener("click", () => $("file").click());
+  $("file").addEventListener("change", e => { const f = e.target.files[0]; if (!f) return;
+    if (f.size > MAX_BYTES) return say("The file is larger than 8 KiB.", true);
+    f.text().then(load).catch(() => say("Could not read that file.", true)); e.target.value = ""; });
+  $("loadPaste").addEventListener("click", () => load($("paste").value));
+  window.addEventListener("resize", fitStage);
+}
+function generate() {
+  const [h, s0] = toHsl($("genAccent").value), dark = $("genMode").value === "dark", s = Math.min(s0, 90);
+  const next = dark ? {
+    background: hsl(h, 18, 10), panel: hsl(h, 17, 13.5), well: hsl(h, 20, 7.5), text: hsl(h, 20, 92), dim: hsl(h, 10, 62),
+    edge: hsl(h, 14, 21), control: hsl(h, 16, 16), controlEdge: hsl(h, 14, 24), accent: hsl(h, Math.max(s, 55), 62), warm: hsl((h + 150) % 360, 85, 62), danger: "#ff5d5d",
+  } : {
+    background: hsl(h, 14, 95), panel: "#ffffff", well: hsl(h, 14, 90), text: hsl(h, 16, 12), dim: hsl(h, 8, 38),
+    edge: hsl(h, 12, 82), control: hsl(h, 14, 97), controlEdge: hsl(h, 10, 76), accent: hsl(h, Math.max(s, 60), 33), warm: hsl((h + 150) % 360, 90, 36), danger: "#c62828",
+  };
+  Object.assign(state, next); refresh(false);
+}
+function say(text, bad) { const m = $("msg"); m.textContent = text; m.className = "msg " + (bad ? "bad" : "good"); }
+function load(text) {
+  try { const t = readTheme(text); Object.assign(state, t); refresh(false); say("Loaded \"" + t.name + "\".", false); $("importBox").open = false; }
+  catch (e) { say(e.message, true); }
+}
+function slug(s) { return (cleanName(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "theme"); }
+function download() {
+  if (problems().length) return;
+  const blob = new Blob([JSON.stringify(toTheme(), null, 2) + "\n"], { type: "application/json" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = slug(state.name) + ".json";
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  say("Saved " + a.download + ". Put it in the themes folder, then choose Reload themes.", false);
+}
+async function copyJson() {
+  if (problems().length) return;
+  const text = JSON.stringify(toTheme(), null, 2) + "\n";
+  try { await navigator.clipboard.writeText(text); say("JSON copied.", false); }
+  catch { $("importBox").open = true; $("paste").value = text; $("paste").select(); say("Copy it from the box below.", false); }
+}
+function refresh(keepFocus) {
+  for (const [k] of FIELDS) {
+    if (hexOk(state[k])) { $("c_" + k).value = state[k]; if (!keepFocus || document.activeElement !== $("t_" + k)) { $("t_" + k).value = state[k]; $("t_" + k).classList.remove("bad"); } }
+  }
+  if (!keepFocus || document.activeElement !== $("name")) $("name").value = state.name;
+  $("radius").value = state.radius; $("radiusVal").textContent = state.radius;
+  const list = [];
+  for (const [label, fg, bg, need] of RULES) {
+    const c = hexOk(state[fg]) && hexOk(state[bg]) ? contrast(state[fg], state[bg]) : 0, ok = c >= need;
+    list.push(`<li><span>${label}</span><span class="${ok ? "ok" : "no"}">${c.toFixed(1)}:1 ${ok ? "OK" : "needs " + need + ":1"}</span></li>`);
+  }
+  $("checks").innerHTML = list.join("");
+  const bad = problems().length > 0;
+  $("download").disabled = bad; $("copy").disabled = bad;
+  if (bad) say(problems()[0], true); else if ($("msg").classList.contains("bad")) say("", false);
+  applyPreview();
+}
+buildControls(); buildPreview(); refresh(false); fitStage();
+</script>
+</body>
+</html>
