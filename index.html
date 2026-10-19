@@ -158,6 +158,13 @@ textarea { min-height: 120px; font-family: ui-monospace, Consolas, monospace; fo
 .guide { position: absolute; background: #ff4dd2; z-index: 10; pointer-events: none; }
 .guide.v { width: 1px; top: 0; bottom: 0; } .guide.hz { height: 1px; left: 0; right: 0; }
 
+
+.finding { display: grid; grid-template-columns: 10px 1fr; gap: 8px; padding: 7px 8px; border-bottom: 1px solid var(--ui-edge); font-size: 12.5px; }
+.finding i { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; background: var(--ui-dim); } .finding.warn i { background: #f0a020; }
+.finding .acts { display: flex; gap: 6px; margin-top: 5px; } .finding button { padding: 3px 8px; font-size: 12px; }
+#checksL { border: 1px solid var(--ui-edge); border-radius: 6px; background: var(--ui-bg); max-height: 300px; overflow-y: auto; }
+#checksL .none { padding: 8px; color: var(--ui-good); font-size: 12.5px; }
+
 @media (max-width: 900px) {
   .app { grid-template-columns: 1fr; } aside { position: static; max-height: none; border-right: 0; border-bottom: 1px solid var(--ui-edge); }
 }
@@ -184,6 +191,8 @@ textarea { min-height: 120px; font-family: ui-monospace, Consolas, monospace; fo
       <span class="name">Main colour</span>
       <select id="genMode" aria-label="Style"><option value="dark">Dark</option><option value="light">Light</option></select>
     </div>
+    <label for="genHarmony" style="margin-top:6px">Second colour (the warm one)</label>
+    <select id="genHarmony" aria-label="Colour harmony" style="margin-bottom:8px"><option value="150">Contrasting</option><option value="180">Complementary</option><option value="30">Analogous (neighbour)</option><option value="120">Triadic</option><option value="0">Same hue</option></select>
     <button id="generate" style="width:100%">Generate palette</button>
 
     <h2>Name</h2>
@@ -252,8 +261,13 @@ textarea { min-height: 120px; font-family: ui-monospace, Consolas, monospace; fo
         <button data-a="left" title="Align left">⇤</button><button data-a="hcenter" title="Centre horizontally">↔</button><button data-a="right" title="Align right">⇥</button>
         <button data-a="top" title="Align top">⤒</button><button data-a="vcenter" title="Centre vertically">↕</button><button data-a="bottom" title="Align bottom">⤓</button>
         <button data-a="hdist" title="Distribute horizontally (3 or more)">⇹</button><button data-a="vdist" title="Distribute vertically (3 or more)">⇳</button>
+        <button data-a="same" title="Give the selected elements the size of the last one selected">Same size</button>
         <button id="resetSel">Reset selected</button>
       </div>
+
+      <h2>Design check</h2>
+      <p class="hint" id="chkHint">Looks at the elements you change: sizes that almost match, controls too small to grab, uneven or missing space, near-misses in alignment.</p>
+      <div id="checksL" aria-live="polite"></div>
 
       <h2>Elements</h2>
       <div id="tree" role="listbox" aria-label="Elements"></div>
@@ -300,32 +314,32 @@ textarea { min-height: 120px; font-family: ui-monospace, Consolas, monospace; fo
   {"id": "preset", "type": "group", "label": "Presets", "x": 164, "y": 18, "w": 330, "h": 50},
   {"id": "model", "type": "menu", "label": "Oscillator model", "param": "model", "x": 506, "y": 20, "w": 230, "h": 46},
   {"id": "meter", "type": "meter", "label": "Voices and level", "x": 774, "y": 36, "w": 102, "h": 38},
-  {"id": "knob.volume", "type": "knob", "label": "Volume", "param": "volume", "x": 874, "y": 14, "w": 94, "h": 76},
+  {"id": "knob.volume", "type": "knob", "label": "Volume", "param": "volume", "x": 886, "y": 14, "w": 70, "h": 74},
   {"id": "header.osc", "type": "label", "label": "Oscillator header", "parent": "panel.osc", "x": 24, "y": 94, "w": 316, "h": 26},
-  {"id": "knob.harmonics", "type": "knob", "label": "Harmonics", "param": "harmonics", "parent": "panel.osc", "x": 20, "y": 120, "w": 81, "h": 212},
-  {"id": "knob.timbre", "type": "knob", "label": "Timbre", "param": "timbre", "parent": "panel.osc", "x": 101, "y": 120, "w": 81, "h": 212},
-  {"id": "knob.morph", "type": "knob", "label": "Morph", "param": "morph", "parent": "panel.osc", "x": 182, "y": 120, "w": 81, "h": 212},
-  {"id": "knob.tune", "type": "knob", "label": "Tune", "param": "tune", "parent": "panel.osc", "x": 263, "y": 120, "w": 81, "h": 212},
+  {"id": "knob.harmonics", "type": "knob", "label": "Harmonics", "param": "harmonics", "parent": "panel.osc", "x": 25, "y": 176, "w": 70, "h": 100},
+  {"id": "knob.timbre", "type": "knob", "label": "Timbre", "param": "timbre", "parent": "panel.osc", "x": 106, "y": 176, "w": 70, "h": 100},
+  {"id": "knob.morph", "type": "knob", "label": "Morph", "param": "morph", "parent": "panel.osc", "x": 187, "y": 176, "w": 70, "h": 100},
+  {"id": "knob.tune", "type": "knob", "label": "Tune", "param": "tune", "parent": "panel.osc", "x": 268, "y": 176, "w": 70, "h": 100},
   {"id": "header.filter", "type": "label", "label": "Filter header", "parent": "panel.filter", "x": 368, "y": 96, "w": 253, "h": 22},
   {"id": "menu.filterMode", "type": "menu", "label": "Filter type", "param": "filterMode", "parent": "panel.filter", "x": 621, "y": 96, "w": 120, "h": 22},
   {"id": "graph.filter", "type": "graph", "label": "Filter response", "parent": "panel.filter", "x": 368, "y": 122, "w": 373, "h": 91},
-  {"id": "knob.cutoff", "type": "knob", "label": "Cutoff", "param": "cutoff", "parent": "panel.filter", "x": 366, "y": 215, "w": 188, "h": 117},
-  {"id": "knob.resonance", "type": "knob", "label": "Resonance", "param": "resonance", "parent": "panel.filter", "x": 554, "y": 215, "w": 188, "h": 117},
+  {"id": "knob.cutoff", "type": "knob", "label": "Cutoff", "param": "cutoff", "parent": "panel.filter", "x": 425, "y": 223, "w": 70, "h": 100},
+  {"id": "knob.resonance", "type": "knob", "label": "Resonance", "param": "resonance", "parent": "panel.filter", "x": 613, "y": 223, "w": 70, "h": 100},
   {"id": "header.lfo", "type": "label", "label": "LFO header", "parent": "panel.lfo", "x": 769, "y": 96, "w": 75, "h": 22},
   {"id": "menu.lfoShape", "type": "menu", "label": "LFO shape", "param": "lfoShape", "parent": "panel.lfo", "x": 844, "y": 96, "w": 112, "h": 22},
-  {"id": "knob.lfoRate", "type": "knob", "label": "LFO rate", "param": "lfoRate", "parent": "panel.lfo", "x": 765, "y": 120, "w": 195, "h": 212},
+  {"id": "knob.lfoRate", "type": "knob", "label": "LFO rate", "param": "lfoRate", "parent": "panel.lfo", "x": 827, "y": 176, "w": 70, "h": 100},
   {"id": "header.ampEnv", "type": "label", "label": "Amp envelope header", "parent": "panel.ampEnv", "x": 24, "y": 340, "w": 452, "h": 26},
   {"id": "graph.ampEnv", "type": "graph", "label": "Amp envelope shape", "parent": "panel.ampEnv", "x": 321, "y": 372, "w": 153, "h": 111},
   {"id": "header.fltEnv", "type": "label", "label": "Filter envelope header", "parent": "panel.fltEnv", "x": 504, "y": 340, "w": 452, "h": 26},
   {"id": "graph.fltEnv", "type": "graph", "label": "Filter envelope shape", "parent": "panel.fltEnv", "x": 801, "y": 372, "w": 153, "h": 111},
-  {"id": "knob.ampA", "type": "knob", "label": "Amp A", "param": "ampA", "parent": "panel.ampEnv", "x": 20, "y": 366, "w": 73, "h": 123},
-  {"id": "knob.fltA", "type": "knob", "label": "Filter A", "param": "fltA", "parent": "panel.fltEnv", "x": 500, "y": 366, "w": 73, "h": 123},
-  {"id": "knob.ampD", "type": "knob", "label": "Amp D", "param": "ampD", "parent": "panel.ampEnv", "x": 93, "y": 366, "w": 73, "h": 123},
-  {"id": "knob.fltD", "type": "knob", "label": "Filter D", "param": "fltD", "parent": "panel.fltEnv", "x": 573, "y": 366, "w": 73, "h": 123},
-  {"id": "knob.ampS", "type": "knob", "label": "Amp S", "param": "ampS", "parent": "panel.ampEnv", "x": 166, "y": 366, "w": 73, "h": 123},
-  {"id": "knob.fltS", "type": "knob", "label": "Filter S", "param": "fltS", "parent": "panel.fltEnv", "x": 646, "y": 366, "w": 73, "h": 123},
-  {"id": "knob.ampR", "type": "knob", "label": "Amp R", "param": "ampR", "parent": "panel.ampEnv", "x": 239, "y": 366, "w": 73, "h": 123},
-  {"id": "knob.fltR", "type": "knob", "label": "Filter R", "param": "fltR", "parent": "panel.fltEnv", "x": 719, "y": 366, "w": 73, "h": 123},
+  {"id": "knob.ampA", "type": "knob", "label": "Amp A", "param": "ampA", "parent": "panel.ampEnv", "x": 21, "y": 377, "w": 70, "h": 100},
+  {"id": "knob.fltA", "type": "knob", "label": "Filter A", "param": "fltA", "parent": "panel.fltEnv", "x": 501, "y": 377, "w": 70, "h": 100},
+  {"id": "knob.ampD", "type": "knob", "label": "Amp D", "param": "ampD", "parent": "panel.ampEnv", "x": 94, "y": 377, "w": 70, "h": 100},
+  {"id": "knob.fltD", "type": "knob", "label": "Filter D", "param": "fltD", "parent": "panel.fltEnv", "x": 574, "y": 377, "w": 70, "h": 100},
+  {"id": "knob.ampS", "type": "knob", "label": "Amp S", "param": "ampS", "parent": "panel.ampEnv", "x": 167, "y": 377, "w": 70, "h": 100},
+  {"id": "knob.fltS", "type": "knob", "label": "Filter S", "param": "fltS", "parent": "panel.fltEnv", "x": 647, "y": 377, "w": 70, "h": 100},
+  {"id": "knob.ampR", "type": "knob", "label": "Amp R", "param": "ampR", "parent": "panel.ampEnv", "x": 240, "y": 377, "w": 70, "h": 100},
+  {"id": "knob.fltR", "type": "knob", "label": "Filter R", "param": "fltR", "parent": "panel.fltEnv", "x": 720, "y": 377, "w": 70, "h": 100},
   {"id": "header.matrix", "type": "label", "label": "Matrix header", "parent": "panel.matrix", "x": 24, "y": 497, "w": 932, "h": 26},
   {"id": "matrix.src.0", "type": "label", "label": "LFO", "parent": "panel.matrix", "x": 24, "y": 546, "w": 110, "h": 19},
   {"id": "matrix.bar.0", "type": "meter", "label": "LFO level", "parent": "panel.matrix", "x": 26, "y": 565, "w": 100, "h": 15},
@@ -569,13 +583,13 @@ function buildControls() {
   window.addEventListener("resize", fitStage);
 }
 function generate() {
-  const [h, s0] = toHsl($("genAccent").value), dark = $("genMode").value === "dark", s = Math.min(s0, 90);
+  const harmony = +$("genHarmony").value, [h, s0] = toHsl($("genAccent").value), dark = $("genMode").value === "dark", s = Math.min(s0, 90);
   const next = dark ? {
     background: hsl(h, 18, 10), panel: hsl(h, 17, 13.5), well: hsl(h, 20, 7.5), text: hsl(h, 20, 92), dim: hsl(h, 10, 62),
-    edge: hsl(h, 14, 21), control: hsl(h, 16, 16), controlEdge: hsl(h, 14, 24), accent: hsl(h, Math.max(s, 55), 62), warm: hsl((h + 150) % 360, 85, 62), danger: "#ff5d5d",
+    edge: hsl(h, 14, 21), control: hsl(h, 16, 16), controlEdge: hsl(h, 14, 24), accent: hsl(h, Math.max(s, 55), 62), warm: hsl((h + harmony) % 360, 85, 62), danger: "#ff5d5d",
   } : {
     background: hsl(h, 14, 95), panel: "#ffffff", well: hsl(h, 14, 90), text: hsl(h, 16, 12), dim: hsl(h, 8, 38),
-    edge: hsl(h, 12, 82), control: hsl(h, 14, 97), controlEdge: hsl(h, 10, 76), accent: hsl(h, Math.max(s, 60), 33), warm: hsl((h + 150) % 360, 90, 36), danger: "#c62828",
+    edge: hsl(h, 12, 82), control: hsl(h, 14, 97), controlEdge: hsl(h, 10, 76), accent: hsl(h, Math.max(s, 60), 33), warm: hsl((h + harmony) % 360, 90, 36), danger: "#c62828",
   };
   Object.assign(state, next); refresh(false);
 }
@@ -607,7 +621,7 @@ function refresh(keepFocus) {
   const list = [];
   for (const [label, fg, bg, need] of RULES) {
     const c = hexOk(state[fg]) && hexOk(state[bg]) ? contrast(state[fg], state[bg]) : 0, ok = c >= need;
-    list.push(`<li><span>${label}</span><span class="${ok ? "ok" : "no"}">${c.toFixed(1)}:1 ${ok ? "OK" : "needs " + need + ":1"}</span></li>`);
+    list.push(`<li><span>${label}</span><span class="${ok ? "ok" : "no"}">${c.toFixed(1)}:1 ${ok ? (fg === "text" && c >= 4.5 ? "good" : "OK") : "needs " + need + ":1"}</span></li>`);
   }
   $("checks").innerHTML = list.join("");
   const bad = problems().length > 0;
@@ -746,6 +760,7 @@ function refreshLayout() {
     const nm = document.createElement("span"); nm.textContent = e.label; const sm = document.createElement("small"); sm.textContent = e.id;
     row.append(chg, nm, sm); tree.appendChild(row);
   }
+  renderChecks();
   // export state
   const n = changed().length, tooMany = n > MAX_LAYOUT_ENTRIES, noName = !cleanText($("layoutName").value, 48);
   $("lDownload").disabled = !n || tooMany || noName; $("lCopy").disabled = $("lDownload").disabled;
@@ -825,6 +840,7 @@ function nudge(dx, dy) {
 }
 function align(kind) {
   const ids = selected(); if (ids.length < 2) return;
+  if (kind === "same") { const ref = eff(primary()); setSame(ids, { w: ref.w, h: ref.h }); return; }
   const rs = ids.map(i => [i, eff(i)]), minX = Math.min(...rs.map(([, r]) => r.x)), maxX = Math.max(...rs.map(([, r]) => r.x + r.w));
   const minY = Math.min(...rs.map(([, r]) => r.y)), maxY = Math.max(...rs.map(([, r]) => r.y + r.h));
   if (kind === "hdist" || kind === "vdist") {
@@ -881,6 +897,112 @@ function downloadLayout() {
   const blob = new Blob([layoutJson()], { type: "application/json" }), a = document.createElement("a");
   a.href = URL.createObjectURL(blob); a.download = slug($("layoutName").value) + ".json"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   lsay("Saved " + a.download + ". Put it in the layouts folder, then choose Reload layouts.", false);
+}
+
+// ---- design check ---------------------------------------------------------------------------------------------------
+const MIN_HIT = { knob: [36, 48], slider: [40, 14], menu: [44, 20], group: [120, 28] };   // smallest comfortable size to grab, base px
+function setSame(ids, size) { for (const i of ids) { const r = eff(i); setEff(i, { ...r, x: r.x + (r.w - size.w) / 2, y: r.y + (r.h - size.h) / 2, w: size.w, h: size.h }); } commit(); }
+function designChecks() {
+  const out = []; if (!LAYOUT.desc) return out;
+  const R = id => eff(id), items = LAYOUT.desc.elements.filter(e => e.type !== "panel" && R(e.id).visible !== false);
+  const touched = ids => ids.some(i => LAYOUT.layout[i]), nm = id => LAYOUT.defs.get(id).label;
+  const add = (sev, text, ids, fix) => { if (touched(ids)) out.push({ sev, text, ids, fix }); };
+  // 1. sizes that almost match (a few pixels apart read as mistakes), and mixed sizes
+  for (const t of ["knob", "slider", "menu"]) {
+    const list = items.filter(e => e.type === t), parent = list.map((_, i) => i), find = i => parent[i] === i ? i : (parent[i] = find(parent[i]));
+    for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) {
+      const a = R(list[i].id), b = R(list[j].id);
+      if (Math.abs(a.w - b.w) <= 6 && Math.abs(a.h - b.h) <= 6) parent[find(i)] = find(j);
+    }
+    const clusters = new Map(); list.forEach((e, i) => { const k = find(i); (clusters.get(k) || clusters.set(k, []).get(k)).push(e.id); });
+    const sizes = new Map();
+    for (const ids of clusters.values()) {
+      const counts = new Map(); for (const id of ids) { const r = R(id), k = r.w + "×" + r.h; counts.set(k, (counts.get(k) || 0) + 1); }
+      for (const [k, n] of counts) sizes.set(k, (sizes.get(k) || 0) + n);
+      if (counts.size > 1) {
+        const best = [...counts].sort((a, b) => b[1] - a[1] || parseInt(b[0]) - parseInt(a[0]))[0][0].split("×").map(Number);
+        add("warn", `${ids.length} ${t}s are almost the same size but not quite (${[...counts].map(([k, n]) => k + " ×" + n).join(", ")}). A few pixels of difference look like a mistake.`, ids,
+          { label: `Make them ${best[0]}×${best[1]}`, run: () => setSame(ids, { w: best[0], h: best[1] }) });
+      }
+    }
+    const resized = list.filter(e => { const r = R(e.id), d = LAYOUT.defs.get(e.id); return LAYOUT.layout[e.id] && (r.w !== d.w || r.h !== d.h); }).map(e => e.id);
+    if (clusters.size > 1 && resized.length) add("info", `The ${t}s come in ${clusters.size} different sizes (${[...sizes].map(([k, n]) => k + " ×" + n).join(", ")}). Fine if one is meant to stand out.`, resized);
+  }
+  // 2. too small to grab (Fitts's law)
+  for (const e of items) {
+    const m = MIN_HIT[e.type], r = R(e.id);
+    if (m && (r.w < m[0] || r.h < m[1]))
+      add("warn", `${e.label} is ${r.w}×${r.h}: small to grab. A ${e.type} should be at least ${m[0]}×${m[1]}.`, [e.id],
+        { label: "Grow it", run: () => { setEff(e.id, { ...r, x: r.x - Math.max(0, m[0] - r.w) / 2, y: r.y - Math.max(0, m[1] - r.h) / 2, w: Math.max(r.w, m[0]), h: Math.max(r.h, m[1]) }); commit(); } });
+  }
+  // 3. overlaps and elements that almost touch
+  const over = new Set(), near = [];
+  for (let i = 0; i < items.length; i++) for (let j = i + 1; j < items.length; j++) {
+    const a = R(items[i].id), b = R(items[j].id), ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x), oy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
+    if (ox > 3 && oy > 3) { over.add(items[i].id); over.add(items[j].id); }
+    else if ((ox > 0 && oy < 0 && oy > -4) || (oy > 0 && ox < 0 && ox > -4)) near.push([items[i].id, items[j].id]);
+  }
+  if (over.size) add("warn", `${over.size} elements overlap. Move them apart or hide one.`, [...over]);
+  if (near.length) add("info", near.length === 1 ? `${nm(near[0][0])} and ${nm(near[0][1])} almost touch. Leave a little space, or group them clearly.` : `${near.length} pairs of elements almost touch (less than 4 px apart).`, [...new Set(near.flat())]);
+  // 4. uneven spacing in a row or a column of the same kind of element
+  const groups = new Map();
+  for (const e of items) if (["knob", "slider", "menu", "meter", "graph"].includes(e.type)) { const k = e.type + "|" + e.parent; (groups.get(k) || groups.set(k, []).get(k)).push(e.id); }
+  for (const ids of groups.values()) for (const horizontal of [true, false]) {
+    const c = id => { const r = R(id); return horizontal ? r.y + r.h / 2 : r.x + r.w / 2; };
+    const lines = [];
+    for (const id of [...ids].sort((a, b) => c(a) - c(b))) { const last = lines[lines.length - 1]; if (last && Math.abs(c(last[0]) - c(id)) <= 6) last.push(id); else lines.push([id]); }
+    for (const line of lines) if (line.length >= 3) {
+      const s = [...line].sort((a, b) => (horizontal ? R(a).x - R(b).x : R(a).y - R(b).y)), gaps = [];
+      for (let i = 0; i + 1 < s.length; i++) { const a = R(s[i]), b = R(s[i + 1]); gaps.push(horizontal ? b.x - a.x - a.w : b.y - a.y - a.h); }
+      if (Math.max(...gaps) - Math.min(...gaps) > 2)
+        add("warn", `The spaces between ${s.length} ${horizontal ? "side-by-side" : "stacked"} elements are uneven (${gaps.map(Math.round).join(", ")} px).`, s,
+          { label: "Space them evenly", run: () => { LAYOUT.sel = new Set(s); align(horizontal ? "hdist" : "vdist"); } });
+    }
+  }
+  // 5. contents against their panel
+  for (const e of items) if (e.parent && LAYOUT.defs.has(e.parent) && R(e.parent).visible !== false) {
+    const p = R(e.parent), r = R(e.id);
+    if (r.x < p.x - 2 || r.y < p.y - 2 || r.x + r.w > p.x + p.w + 2 || r.y + r.h > p.y + p.h + 2) add("warn", `${e.label} sticks out of its panel (${nm(e.parent)}).`, [e.id, e.parent]);
+    else if (Math.min(r.x - p.x, r.y - p.y, p.x + p.w - r.x - r.w, p.y + p.h - r.y - r.h) < 4) add("info", `${e.label} touches the edge of its panel. A little margin keeps it calm.`, [e.id, e.parent]);
+  }
+  // 6. near-misses in alignment
+  const found = [], edges = r => ({ l: r.x, c: r.x + r.w / 2, r: r.x + r.w, t: r.y, m: r.y + r.h / 2, b: r.y + r.h });
+  for (let i = 0; i < items.length; i++) for (let j = i + 1; j < items.length; j++) {
+    const a = R(items[i].id), b = R(items[j].id), ea = edges(a), eb = edges(b);
+    const gapX = Math.max(a.x, b.x) - Math.min(a.x + a.w, b.x + b.w), gapY = Math.max(a.y, b.y) - Math.min(a.y + a.h, b.y + b.h);
+    for (const [k, axisGap, name] of [["l", gapY, "left edges"], ["c", gapY, "centres"], ["r", gapY, "right edges"], ["t", gapX, "top edges"], ["m", gapX, "centres"], ["b", gapX, "bottom edges"]]) {
+      const d = Math.abs(ea[k] - eb[k]);
+      if (d >= 1 && d <= 3 && axisGap < 140) found.push({ a: items[i].id, b: items[j].id, k, d, name });
+    }
+  }
+  const seen = new Set(); let shown = 0;
+  for (const f of found) {
+    if (shown >= 6) break;
+    const key = f.k + [f.a, f.b].sort().join(); if (seen.has(key)) continue; seen.add(key);
+    if (!touched([f.a, f.b])) continue;
+    shown++;
+    add("warn", `${nm(f.a)} and ${nm(f.b)}: ${f.name} are ${Math.round(f.d)} px apart. Almost aligned looks accidental.`, [f.a, f.b],
+      { label: "Align them", run: () => {
+        const ra = eff(f.a), rb = eff(f.b), vert = "lcr".includes(f.k), key = vert ? "x" : "y", ofs = { l: 0, c: 0.5, r: 1, t: 0, m: 0.5, b: 1 }[f.k], len = vert ? "w" : "h";
+        setEff(f.b, { ...rb, [key]: ra[key] + ra[len] * ofs - rb[len] * ofs }); commit(); } });
+  }
+  return out;
+}
+function renderChecks() {
+  const box = $("checksL"); if (!box) return; box.replaceChildren();
+  const note = (cls, t) => { const d = document.createElement("div"); d.className = "none"; if (cls) d.style.color = cls; d.textContent = t; box.appendChild(d); };
+  if (!Object.keys(LAYOUT.layout).length) return note("var(--ui-dim)", "No changes to check yet.");
+  const list = designChecks();
+  if (!list.length) return note("", "✓ No issues found in your changes.");
+  for (const f of list.sort((a, b) => (a.sev === b.sev ? 0 : a.sev === "warn" ? -1 : 1))) {
+    const row = document.createElement("div"); row.className = "finding " + f.sev;
+    const dot = document.createElement("i"), body = document.createElement("div"), txt = document.createElement("div"); txt.textContent = f.text; body.appendChild(txt);
+    const acts = document.createElement("div"); acts.className = "acts";
+    if (f.ids.length) { const b = document.createElement("button"); b.textContent = "Show"; b.addEventListener("click", () => { LAYOUT.sel = new Set(f.ids); refreshLayout(); }); acts.appendChild(b); }
+    if (f.fix) { const b = document.createElement("button"); b.textContent = f.fix.label; b.addEventListener("click", f.fix.run); acts.appendChild(b); }
+    if (acts.children.length) body.appendChild(acts);
+    row.append(dot, body); box.appendChild(row);
+  }
 }
 
 // ---- wiring ---------------------------------------------------------------------------------------------------------------
